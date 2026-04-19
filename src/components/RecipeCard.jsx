@@ -1,9 +1,16 @@
 import React from 'react';
 import './RecipeCard.css';
 import { supabase } from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 export default function RecipeCard({ id, title, image, chef }) {
   
+    const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/recipe/${id}`); // Redirects to e.g., /recipe/123-abc
+  }
+    const displayImage = image || 'https://via.placeholder.com/400x300?text=No+Image+Found';
   const handleSave = async (e) => {
     e.stopPropagation(); // Prevents clicking the heart from opening the recipe detail
     
@@ -28,7 +35,7 @@ export default function RecipeCard({ id, title, image, chef }) {
   };
 
   return (
-    <div className="recipe-card">
+    <div className="recipe-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="save-icon" onClick={handleSave}>🔖</div>
       <img src={image} className="recipe-image" alt={title} />
       <div className="recipe-info">
