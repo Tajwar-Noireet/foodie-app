@@ -1,0 +1,85 @@
+/* --- 1. THE KILL SWITCH: Hide on Mobile --- */
+.desktop-sidebar {
+  display: none !important; 
+}
+
+/* --- 2. Desktop Styles --- */
+@media (min-width: 1024px) {
+  .desktop-sidebar {
+    display: flex !important; /* Forces it to appear on PC */
+    flex-direction: column;
+    width: 260px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    padding: 30px 20px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background: #FFFFFF;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  .sidebar-brand h2 {
+    margin: 0 0 40px 15px;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .sidebar-link .icon {
+    font-size: 22px;
+    opacity: 0.5;
+  }
+
+  .sidebar-link:hover {
+    background: rgba(0, 0, 0, 0.04);
+    transform: translateX(5px);
+  }
+
+  .sidebar-link.active {
+    background: rgba(0, 0, 0, 0.08);
+    font-weight: 700;
+  }
+
+  .sidebar-link.active .icon {
+    opacity: 1;
+  }
+
+  .create-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    background: #1D1B20;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 100px;
+    transition: transform 0.2s;
+  }
+
+  .create-btn:hover {
+    transform: scale(1.02);
+  }
+}

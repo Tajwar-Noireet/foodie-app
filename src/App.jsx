@@ -1,69 +1,33 @@
-import { useState, useEffect } from 'react';
-import { fetchUserSavedMenu } from './recipeService';
-import './App.css'; // Optional: Keeps basic styling
+import { Routes, Route } from 'react-router-dom';
+import BottomNav from './components/BottomNav';
+import DesktopSidebar from './components/DesktopSidebar'; // 1. IMPORT SIDEBAR
+import './App.css';
+
+// --- TEMPORARY SCREEN PLACEHOLDERS ---
+const FeedScreen = () => <div style={{padding: '40px'}}>Feed Screen (Screen 1)</div>;
+const ExploreScreen = () => <div style={{padding: '40px'}}>Explore Screen Placeholder</div>;
+const CreateScreen = () => <div style={{padding: '40px'}}>Create Recipe (Screen 3)</div>;
+const ProfileScreen = () => <div style={{padding: '40px'}}>User Profile (Screen 4)</div>;
+const SavedScreen = () => <div style={{padding: '40px'}}>Saved Recipes (Screen 5)</div>;
 
 function App() {
-  // 1. Set up our UI State (The "Brain" of the component)
-  const [recipes, setRecipes] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // 2. The API Call (Runs once when the page loads)
-  useEffect(() => {
-    const loadData = async () => {
-      // CRITICAL: Since we don't have a login screen yet, we need to hardcode a User ID here to test!
-      // We will replace this with the real logged-in user's ID later.
-      const testUserId = '40e198c0-84e6-46f7-bf4c-3962c749316e'; 
-      
-      const data = await fetchUserSavedMenu(testUserId);
-      
-      if (data) {
-        setRecipes(data.recipes);
-        setIngredients(data.shoppingList);
-      }
-      setLoading(false);
-    };
-
-    loadData();
-  }, []);
-
-  // 3. The Loading Screen
-  if (loading) {
-    return <div>Loading your kitchen...</div>;
-  }
-
-  // 4. The Render (What the user actually sees)
   return (
-    <div className="app-container">
-      <h1>My Saved Menu</h1>
+    <div className="app-layout"> {/* We'll update this classname slightly in App.css */}
+      
+      {/* 2. ADD THE SIDEBAR HERE */}
+      <DesktopSidebar /> 
 
-      <div className="dashboard-grid">
-        {/* Left Side: The Recipes */}
-        <section className="recipe-section">
-          <h2>Recipes to Cook</h2>
-          {recipes.length === 0 ? <p>No recipes saved yet!</p> : null}
-          
-          <ul>
-            {recipes.map(recipe => (
-              <li key={recipe.id}>
-                <strong>{recipe.title}</strong>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Right Side: The Deduplicated Shopping List */}
-        <section className="shopping-list-section">
-          <h2>Master Shopping List</h2>
-          <ul>
-            {ingredients.map((item, index) => (
-              <li key={index}>
-                {item.name} - {item.amounts.join(' + ')}
-              </li>
-            ))}
-          </ul>
-        </section>
+      <div className="main-content">
+        <Routes>
+          <Route path="/" element={<FeedScreen />} />
+          <Route path="/explore" element={<ExploreScreen />} />
+          <Route path="/create" element={<CreateScreen />} />
+          <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/saved" element={<SavedScreen />} />
+        </Routes>
       </div>
+
+      <BottomNav />
     </div>
   );
 }
