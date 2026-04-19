@@ -1,0 +1,36 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+.auth-box {
+  background: white;
+  padding: 40px;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.auth-box h1 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.auth-box p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.toggle-btn {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  color: #007AFF; /* iOS style blue */
+  cursor: pointer;
+  font-weight: 500;
+}
