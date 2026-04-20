@@ -8,7 +8,7 @@ const ExploreScreen = () => {
   const [activeCategory, setActiveCategory] = useState('All');
 
   // These should match the categories in your CreateScreen
-  const categories = ["All", "Breakfast", "Lunch", "Dinner", "Main Course", "Dessert", "Vegan"];
+  const categories = ["All", "Breakfast", "Lunch", "Dinner", "Main Course", "Dessert", "Vegan", "Appetizer", "Snack", "Drink"];
 
   useEffect(() => {
     fetchFilteredRecipes();
