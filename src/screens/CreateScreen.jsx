@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
+import toast from 'react-hot-toast';
 
 const CreateScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -16,7 +17,7 @@ const CreateScreen = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    cuisine: 'Dinner' // Default type
+    cuisine: [] // Default type
   });
 
   // Updated Category List
@@ -48,6 +49,19 @@ const CreateScreen = () => {
     setIngredients(newIngs);
   };
   const removeIngredient = (index) => setIngredients(ingredients.filter((_, i) => i !== index));
+
+  const toggleCategory = (cat) => {
+  setFormData((prev) => {
+    const currentList = prev.cuisine || [];
+    if (currentList.includes(cat)) {
+      // Remove it
+      return { ...prev, cuisine: currentList.filter(c => c !== cat) };
+    } else {
+      // Add it
+      return { ...prev, cuisine: [...currentList, cat] };
+    }
+  });
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,16 +125,15 @@ const CreateScreen = () => {
       }
 
       setProgress(100);
-      alert("Recipe Published! 🚀");
-      
+      toast.success("Recipe Published! 🍳✨");
       // Reset
       setFormData({ title: '', description: '', cuisine: 'Dinner' });
       setIngredients(['']);
       setImagePreview(null);
       setVideoPreview(null);
       
-    } catch (err) {
-      alert(err.message);
+   } catch (err) {
+      toast.error(err.message); // 3. Replace alert()
     } finally {
       setLoading(false);
     }
@@ -150,18 +163,20 @@ const CreateScreen = () => {
 
         {/* --- NEW CATEGORY SELECT --- */}
         <div className="input-group">
-          <label>Meal Type</label>
-          <select 
-            className="cuisine-select"
-            value={formData.cuisine} 
-            onChange={(e) => setFormData({...formData, cuisine: e.target.value})}
-          >
-            {categories.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+          <label>Meal Types (Select multiple)</label>
+          <div className="category-scroll">
+            {categories.map((cat) => (
+              <button 
+                type="button" // Important so it doesn't submit the form!
+                key={cat}
+                className={`chip ${(formData.cuisine || []).includes(cat) ? 'active' : ''}`}
+                onClick={() => toggleCategory(cat)}
+              >
+                {cat}
+              </button>
             ))}
-          </select>
+          </div>
         </div>
-
         <div className="ingredients-section">
           <label>Ingredients</label>
           {ingredients.map((ing, index) => (

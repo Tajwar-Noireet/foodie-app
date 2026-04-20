@@ -473,42 +473,48 @@ body {
 .category-scroll {
   display: flex;
   gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 20px;
-  margin-bottom: 10px;
-  scrollbar-width: none; /* Hides scrollbar for Firefox */
+  overflow-x: auto; /* Keeps the scrolling ability */
+  padding: 10px 0;
+  margin-bottom: 20px;
+  
+  /* This is the magic line for desktop */
+  flex-wrap: nowrap; 
+  
+  /* Optional: Add this if you want to be able to drag with a mouse on desktop */
+  cursor: grab;
 }
 
-.category-scroll::-webkit-scrollbar {
-  display: none; /* Hides scrollbar for Chrome/Safari */
-}
-
-/* Individual Chip Style */
 .chip {
   padding: 8px 20px;
   background-color: #f4f4f5;
   border: 1px solid #e4e4e7;
   border-radius: 25px;
-  white-space: nowrap;
+  
+  /* CRITICAL: This prevents the text from squishing */
+  white-space: nowrap; 
+  
+  /* CRITICAL: This prevents the button itself from getting skinnier */
+  flex-shrink: 0; 
+  
   font-size: 14px;
   font-weight: 600;
   color: #71717a;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.chip:hover {
-  background-color: #e4e4e7;
+/* Let's bring back a subtle scrollbar for desktop so users know it's scrollable */
+@media (min-width: 768px) {
+  .category-scroll::-webkit-scrollbar {
+    display: block;
+    height: 4px;
+  }
+  .category-scroll::-webkit-scrollbar-thumb {
+    background: #e4e4e7;
+    border-radius: 10px;
+  }
 }
-
 .chip.active {
-  background-color: #1D1B20;
-  color: white;
-  border-color: #1D1B20;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 50px 20px;
-  color: #a1a1aa;
+  background-color: #1D1B20 !important; /* The !important forces it to override */
+  color: white !important;
+  border-color: #1D1B20 !important;
 }

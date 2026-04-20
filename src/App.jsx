@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import DesktopSidebar from './components/DesktopSidebar'; 
 import BottomNav from './components/BottomNav';
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 
@@ -14,6 +15,7 @@ import SavedScreen from './screens/SavedScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import AuthScreen from './screens/AuthScreen';
+import EditScreen from './screens/EditScreen';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -33,6 +35,24 @@ function App() {
     <div className="app-layout">
       {/* 2. THE PERMANENT UI (These stay on screen at all times) */}
       <DesktopSidebar /> 
+
+      <Toaster 
+        position="top-center" 
+        toastOptions={{
+          style: {
+            background: '#1D1B20', // Matches your dark theme
+            color: '#fff',
+            borderRadius: '10px',
+            fontWeight: '600',
+          },
+          success: {
+            iconTheme: {
+              primary: '#4ade80', // A nice modern green
+              secondary: '#1D1B20',
+            },
+          },
+        }} 
+      />
       
       <div className="main-content">
         {/* 3. THE DYNAMIC CONTENT (Only this part changes) */}
@@ -44,6 +64,7 @@ function App() {
           <Route path="/profile" element={<ProfileScreen session={session} />} />
           <Route path="/recipe/:id" element={<RecipeDetailScreen />} />
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/edit/:id" element={<EditScreen />} />
         </Routes>
       </div>
 
