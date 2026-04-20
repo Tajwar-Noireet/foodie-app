@@ -463,3 +463,52 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Explore Container */
+.explore-container {
+  padding: 20px;
+}
+
+/* Horizontal Scroll for Chips */
+.category-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  scrollbar-width: none; /* Hides scrollbar for Firefox */
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none; /* Hides scrollbar for Chrome/Safari */
+}
+
+/* Individual Chip Style */
+.chip {
+  padding: 8px 20px;
+  background-color: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 25px;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: #71717a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip:hover {
+  background-color: #e4e4e7;
+}
+
+.chip.active {
+  background-color: #1D1B20;
+  color: white;
+  border-color: #1D1B20;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: #a1a1aa;
+}
