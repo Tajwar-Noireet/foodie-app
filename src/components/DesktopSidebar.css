@@ -1,4 +1,30 @@
+@font-face {
+  font-family: 'Nexa';
+  /* This path goes up one level (..) to assets, then into fonts */
+  src: url('../assets/fonts/NexaBold.otf') format('opentype');
+  font-weight: bold;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  cursor: pointer;
+}
+
+.brand-logo-img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+}
+
+
+
+
 /* --- 1. THE KILL SWITCH: Hide on Mobile --- */
+
+
 .desktop-sidebar {
   display: none !important; 
 }
@@ -83,3 +109,4 @@
     transform: scale(1.02);
   }
 }
+

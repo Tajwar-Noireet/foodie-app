@@ -1,166 +1,158 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import RecipeCard from '../components/RecipeCard';
 
-const ProfileScreen = ({ session }) => {
-  const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState('');
+export default function ProfileScreen({ session }) {
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
   const [myRecipes, setMyRecipes] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  
-  // The social stats
-  const [followersCount, setFollowersCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
+  const [stats, setStats] = useState({ followers: 0, following: 0, recipeCount: 0 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (session?.user?.id) {
-      getProfileAndRecipes();
-    }
+    if (session?.user?.id) fetchMyData();
   }, [session]);
 
- const getProfileAndRecipes = async () => {
+  const fetchMyData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      
-      // 1. Fetch Profile Name
+      const myId = session.user.id;
+
+      // 1. Get My Profile Info (Bio, Avatar, etc.)
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('username')
-        .eq('id', session.user.id)
-        .single();
-
-      if (profileData) setUsername(profileData.username || '');
-
-      // 2. Fetch User's Recipes
-      const { data: recipeData } = await supabase
-        .from('recipes')
         .select('*')
-        .eq('author_id', session.user.id)
+        .eq('id', myId)
+        .single();
+      setProfile(profileData);
+
+      // 2. Get My Recipes
+      const { data: recipeData } = await supabase
+        .from('recipes_with_chefs')
+        .select('*')
+        .eq('author_id', myId)
         .order('created_at', { ascending: false });
+      setMyRecipes(recipeData || []);
 
-      if (recipeData) setMyRecipes(recipeData);
-
-      // 3. NEW: Count how many people follow THIS user
-      // { count: 'exact', head: true } asks Supabase just for the number, not the actual data!
-      const { count: followers } = await supabase
+      // 3. Get Follower/Following Counts
+      const { count: followerCount } = await supabase
         .from('follows')
         .select('*', { count: 'exact', head: true })
-        .eq('following_id', session.user.id);
+        .eq('following_id', myId);
         
-      setFollowersCount(followers || 0);
-
-      // 4. NEW: Count how many people THIS user is following
-      const { count: following } = await supabase
+      const { count: followingCount } = await supabase
         .from('follows')
         .select('*', { count: 'exact', head: true })
-        .eq('follower_id', session.user.id);
+        .eq('follower_id', myId);
 
-      setFollowingCount(following || 0);
-
-    } catch (error) {
-      console.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  const updateProfile = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const { error } = await supabase.from('profiles').upsert({
-        id: session.user.id,
-        username: username
+      setStats({
+        followers: followerCount || 0,
+        following: followingCount || 0,
+        recipeCount: recipeData?.length || 0
       });
-      if (error) throw error;
-      toast.success('Profile updated! 👨‍🍳');
-      setIsEditing(false); // Hide form after saving
+
     } catch (error) {
-      toast.error(error.message);
+      console.error("Error fetching my profile:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast.success('Logged out successfully');
-  };
+  if (loading) {
+    return (
+      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
+        <div style={{ display: 'flex', gap: '30px', marginBottom: '40px', alignItems: 'center' }}>
+          <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: '#e0e0e0', animation: 'pulse 1.5s infinite' }}></div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
+             <div style={{ width: '200px', height: '28px', background: '#e0e0e0', borderRadius: '4px', animation: 'pulse 1.5s infinite' }}></div>
+          </div>
+        </div>
+        <div className="recipe-grid">
+          {[1, 2, 3].map(n => <div key={n} className="skeleton-card"></div>)}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="profile-container">
-      {/* HEADER: Username and Logout */}
-      <div className="profile-top-bar">
-        <h2 className="profile-handle">{username || session?.user?.email}</h2>
-        <button className="logout-icon-btn" onClick={handleLogout}>🚪</button>
-      </div>
+    <div className="profile-container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
+      
+      {/* --- TOP PROFILE HEADER (INSTAGRAM STYLE) --- */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '40px', marginBottom: '40px', flexWrap: 'wrap' }}>
+        
+        {/* Avatar */}
+        {profile?.avatar_url ? (
+          <img 
+            src={profile.avatar_url} 
+            alt="My Avatar" 
+            style={{ width: '130px', height: '130px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #dbdbdb' }} 
+          />
+        ) : (
+          <div style={{ width: '130px', height: '130px', borderRadius: '50%', background: '#f0f8ff', border: '2px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '50px' }}>
+            🧑‍🍳
+          </div>
+        )}
 
-      {/* IG STATS SECTION */}
-      <div className="ig-header">
-        <div className="ig-avatar">👨‍🍳</div>
-        <div className="ig-stats">
-          <div className="ig-stat">
-            <span className="ig-stat-num">{myRecipes.length}</span>
-            <span className="ig-stat-label">Recipes</span>
+        {/* Info & Stats */}
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
+            <h1 style={{ margin: 0, fontSize: '28px' }}>@{profile?.username || 'chef'}</h1>
+            <button 
+              onClick={() => navigate('/edit-profile')} 
+              style={{ padding: '8px 24px', borderRadius: '8px', border: '1px solid #dbdbdb', background: '#fafafa', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px' }}
+            >
+              Edit Profile
+            </button>
           </div>
-          <div className="ig-stat">
-            {/* NEW: Use the real follower count */}
-            <span className="ig-stat-num">{followersCount}</span>
-            <span className="ig-stat-label">Followers</span>
+          
+          {/* Stats Bar */}
+          <div style={{ display: 'flex', gap: '40px', marginBottom: '20px', fontSize: '16px' }}>
+            <div><strong style={{ fontSize: '18px' }}>{stats.recipeCount}</strong> recipes</div>
+            <div><strong style={{ fontSize: '18px' }}>{stats.followers}</strong> followers</div>
+            <div><strong style={{ fontSize: '18px' }}>{stats.following}</strong> following</div>
           </div>
-          <div className="ig-stat">
-            {/* NEW: Use the real following count */}
-            <span className="ig-stat-num">{followingCount}</span>
-            <span className="ig-stat-label">Following</span>
+
+          {/* Bio */}
+          <div style={{ fontSize: '15px', lineHeight: '1.5', maxWidth: '500px' }}>
+            <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{profile?.bio || "You haven't written a bio yet. Tap 'Edit Profile' to tell us about your kitchen!"}</p>
           </div>
         </div>
       </div>
 
-      {/* IG BIO SECTION */}
-      <div className="ig-bio">
-        <h3 className="ig-name">{username || "New Chef"}</h3>
-        <p className="ig-email">{session?.user?.email}</p>
+      <hr style={{ border: 'none', borderTop: '1px solid #dbdbdb', marginBottom: '30px' }} />
+
+      {/* --- MY RECIPES GRID --- */}
+      <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid #dbdbdb', paddingBottom: '10px', marginBottom: '20px' }}>
+        <span style={{ fontWeight: 'bold', borderBottom: '2px solid #000', paddingBottom: '10px', textTransform: 'uppercase', fontSize: '14px', letterSpacing: '1px' }}>
+          My Recipes
+        </span>
       </div>
 
-      {/* EDIT BUTTON / FORM TOGGLE */}
-      {!isEditing ? (
-        <button className="ig-btn" onClick={() => setIsEditing(true)}>
-          Edit Profile
-        </button>
-      ) : (
-        <form className="ig-edit-form" onSubmit={updateProfile}>
-          <input 
-            type="text" 
-            placeholder="Your Chef Name"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          <div style={{display: 'flex', gap: '10px'}}>
-            <button type="submit" className="ig-btn primary" disabled={loading}>Save</button>
-            <button type="button" className="ig-btn" onClick={() => setIsEditing(false)}>Cancel</button>
+      <div className="recipe-grid">
+        {myRecipes.length > 0 ? (
+          myRecipes.map((r) => (
+            <RecipeCard 
+              key={r.id}
+              id={r.id}
+              title={r.title}
+              image={r.image_url}
+              chef={profile?.username} 
+              authorId={session.user.id}
+            />
+          ))
+        ) : (
+          <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '50px' }}>
+            <p style={{ color: '#8e8e8e', fontSize: '18px' }}>You haven't posted any recipes yet.</p>
+            <button 
+              onClick={() => navigate('/create')}
+              style={{ color: '#0095f6', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}
+            >
+              Share your first recipe!
+            </button>
           </div>
-        </form>
-      )}
-
-      <hr className="ig-divider" />
-
-      {/* IG PHOTO GRID */}
-      <div className="ig-grid">
-        {myRecipes.map((recipe) => (
-          <Link to={`/recipe/${recipe.id}`} key={recipe.id} className="ig-grid-item">
-            <img src={recipe.image_url || 'https://via.placeholder.com/150'} alt={recipe.title} />
-          </Link>
-        ))}
+        )}
       </div>
-      
-      {myRecipes.length === 0 && !loading && (
-        <p style={{textAlign: 'center', marginTop: '40px', color: '#71717a'}}>No recipes yet. Time to get cooking!</p>
-      )}
     </div>
   );
-};
-
-export default ProfileScreen;
+}

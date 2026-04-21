@@ -17,6 +17,7 @@ import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import AuthScreen from './screens/AuthScreen';
 import EditScreen from './screens/EditScreen';
 import PublicProfileScreen from './screens/PublicProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -77,7 +78,8 @@ useEffect(() => {
           <Route path="/profile" element={<ProfileScreen session={session} />} />
           <Route path="/user/:id" element={<PublicProfileScreen session={session} />} />
           <Route path="/recipe/:id" element={<RecipeDetailScreen session={session} />} />
-          
+          <Route path="/edit-profile" element={<EditProfileScreen session={session} />} />
+
           {/* CATCH-ALL (Must be at the very bottom!) */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

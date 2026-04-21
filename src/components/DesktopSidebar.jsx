@@ -1,16 +1,20 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './DesktopSidebar.css';
+
+// 1. This import points to the folder you just fixed!
+import logoImg from '../assets/images/logo.png';
 
 export default function DesktopSidebar() {
   const location = useLocation();
+  const navigate = useNavigate(); // <-- Added this to fix the error
   const currentPath = location.pathname;
 
   return (
     <aside className="desktop-sidebar">
-      {/* App Logo / Title area */}
-      <div className="sidebar-brand">
-        <h2>ChefGordon</h2>
+      {/* 2. UPDATED: Brand area with Logo and Nexa Font */}
+      <div className="sidebar-brand" onClick={() => navigate('/')}>
+        <img src={logoImg} alt="foodie logo" className="brand-logo-img" />
       </div>
 
       {/* Navigation Links */}
