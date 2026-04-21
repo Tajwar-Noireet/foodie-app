@@ -1,45 +1,93 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import RecipeCard from '../components/RecipeCard';
 
-const SavedScreen = () => {
+export default function SavedScreen({ session }) {
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchSaved();
-  }, []);
+    fetchSavedRecipes();
+  }, [session]);
 
-  const fetchSaved = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    // This query grabs the recipe details THROUGH the saved_recipes table
-    const { data, error } = await supabase
-      .from('saved_recipes')
-      .select(`
-        recipes ( id, title, image_url )
-      `)
-      .eq('user_id', user.id);
-
-    if (!error) {
-      // We flatten the data because Supabase returns nested objects for joins
-      setSavedRecipes(data.map(item => item.recipes));
+  const fetchSavedRecipes = async () => {
+    if (!session?.user?.id) {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+
+    setLoading(true);
+
+    try {
+      // 1. Get the IDs of the recipes this user saved
+      const { data: saves, error: saveErr } = await supabase
+        .from('saved_recipes')
+        .select('recipe_id')
+        .eq('user_id', session.user.id);
+
+      if (saveErr) throw saveErr;
+
+      const savedRecipeIds = saves?.map(s => s.recipe_id) || [];
+
+      if (savedRecipeIds.length === 0) {
+        setSavedRecipes([]);
+        setLoading(false);
+        return;
+      }
+
+      // 2. Fetch those specific recipes using our BULLETPROOF view!
+      const { data: recipes, error: recipeErr } = await supabase
+        .from('recipes_with_chefs')
+        .select('*')
+        .in('id', savedRecipeIds)
+        .order('created_at', { ascending: false });
+
+      if (recipeErr) throw recipeErr;
+
+      setSavedRecipes(recipes || []);
+
+    } catch (err) {
+      console.error("Error fetching saved recipes:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  if (!session) {
+    return (
+      <div style={{ textAlign: 'center', marginTop: '50px', color: '#8e8e8e' }}>
+        <h2>Saved Recipes</h2>
+        <p>Please log in to see your cookbook!</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="feed-container">
-      <h1 className="feed-title">Saved Collection</h1>
-      {savedRecipes.length === 0 ? <p>No bookmarks yet!</p> : (
-        <div className="recipe-grid">
-          {savedRecipes.map((r) => (
-            <RecipeCard key={r.id} id={r.id} title={r.title} image={r.image_url} chef="Me" />
-          ))}
+    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
+      <h1 style={{ marginBottom: '30px' }}>My Cookbook</h1>
+      
+      {loading ? (
+        <p>Opening the cookbook...</p>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+          {savedRecipes.length > 0 ? (
+            savedRecipes.map(r => (
+              <RecipeCard 
+                key={r.id}
+                id={r.id}
+                title={r.title}
+                image={r.image_url}
+                chef={r.chef_name} // Using the view column!
+                authorId={r.author_id}
+              />
+            ))
+          ) : (
+            <p style={{ gridColumn: '1/-1', color: '#8e8e8e' }}>
+              You haven't saved any recipes yet. Go explore and star some!
+            </p>
+          )}
         </div>
       )}
     </div>
   );
-};
-
-export default SavedScreen;
+}

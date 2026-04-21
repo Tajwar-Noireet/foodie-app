@@ -8,20 +8,18 @@ export default function FeedScreen({ session }) {
   const [activeTab, setActiveTab] = useState('explore');
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-console.log("🔴 CURRENT RENDER STATE -> Tab:", activeTab, "| Session ID:", session?.user?.id);
 
   useEffect(() => {
     fetchRecipes();
   }, [activeTab, location.pathname, session]);
 
- const fetchRecipes = async () => {
+  const fetchRecipes = async () => {
     setLoading(true);
     setRecipes([]);
 
     try {
       if (activeTab === 'following') {
         if (!session?.user?.id) {
-          console.log("❌ Blocked: No session ID found."); // LOG 1
           setLoading(false);
           return;
         }
@@ -35,17 +33,12 @@ console.log("🔴 CURRENT RENDER STATE -> Tab:", activeTab, "| Session ID:", ses
         if (followErr) console.error("Follows Fetch Error:", followErr);
 
         const followingIds = follows?.map(f => f.following_id) || [];
-        
-        console.log("✅ Current User ID:", session.user.id); // LOG 2
-        console.log("✅ IDs I am following:", followingIds); // LOG 3
 
         if (followingIds.length === 0) {
           setRecipes([]);
           setLoading(false);
           return;
         }
-
-        // ... rest of the fetch logic
 
         // 2. Query the NEW VIEW instead of the recipes table
         const { data, error } = await supabase
@@ -59,8 +52,6 @@ console.log("🔴 CURRENT RENDER STATE -> Tab:", activeTab, "| Session ID:", ses
 
       } else {
         // EXPLORE TAB
-        
-        // Query the NEW VIEW
         const { data, error } = await supabase
           .from('recipes_with_chefs')
           .select('*')
@@ -93,23 +84,27 @@ console.log("🔴 CURRENT RENDER STATE -> Tab:", activeTab, "| Session ID:", ses
         </button>
       </nav>
 
+      {/* SKELETON LOADER IMPLEMENTED HERE */}
       {loading ? (
-        <p style={{ textAlign: 'center', marginTop: '50px' }}>Loading recipes...</p>
+        <div className="recipe-grid">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <div key={n} className="skeleton-card"></div>
+          ))}
+        </div>
       ) : (
         <div className="recipe-grid">
-  {recipes.length > 0 ? (
-    recipes.map((r) => (
-      <RecipeCard 
-        key={r.id}
-        id={r.id}
-        title={r.title}
-        image={r.image_url}
-        // Use the new flattened column name!
-        chef={r.chef_name || "Unknown Chef"} 
-        authorId={r.author_id}
-      />
-    ))
-  ): (
+          {recipes.length > 0 ? (
+            recipes.map((r) => (
+              <RecipeCard 
+                key={r.id}
+                id={r.id}
+                title={r.title}
+                image={r.image_url}
+                chef={r.chef_name || "Unknown Chef"} 
+                authorId={r.author_id}
+              />
+            ))
+          ) : (
             <p style={{ gridColumn: '1/-1', textAlign: 'center', marginTop: '50px', color: '#8e8e8e' }}>
               {activeTab === 'following' 
                 ? (session ? "You aren't following anyone yet!" : "Log in to see your following feed!") 

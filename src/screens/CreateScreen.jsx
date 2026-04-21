@@ -127,7 +127,7 @@ const CreateScreen = () => {
       setProgress(100);
       toast.success("Recipe Published! 🍳✨");
       // Reset
-      setFormData({ title: '', description: '', cuisine: 'Dinner' });
+      setFormData({ title: '', description: '', cuisine: [] });
       setIngredients(['']);
       setImagePreview(null);
       setVideoPreview(null);

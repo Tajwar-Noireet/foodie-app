@@ -11,16 +11,15 @@ const ExploreScreen = () => {
   const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Dessert", "Vegan", "Snack", "Drink", "Appetizer"];
 
   // Search Bar States
-  const [searchTerm, setSearchTerm] = useState(''); // What the user is typing
-  const [activeSearch, setActiveSearch] = useState(''); // The word we are actually searching for
+  const [searchTerm, setSearchTerm] = useState(''); 
+  const [activeSearch, setActiveSearch] = useState(''); 
 
   useEffect(() => {
     fetchFilteredRecipes();
-  }, [activeFilters, activeSearch]); // Re-run when chips change OR when a search is submitted
+  }, [activeFilters, activeSearch]); 
 
   const fetchFilteredRecipes = async () => {
     setLoading(true);
-    // CHANGE THIS LINE to use our new view!
     let query = supabase.from('recipes_with_chefs').select('*');
 
     // 1. Filter by Categories (Chips)
@@ -30,7 +29,6 @@ const ExploreScreen = () => {
 
     // 2. Filter by Search Text
     if (activeSearch.trim()) {
-      // .ilike is "Case-Insensitive Like"
       query = query.ilike('title', `%${activeSearch}%`);
     }
 
@@ -47,8 +45,8 @@ const ExploreScreen = () => {
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault(); // Prevents the page from refreshing
-    setActiveSearch(searchTerm); // This triggers the useEffect!
+    e.preventDefault(); 
+    setActiveSearch(searchTerm); 
   };
 
   return (
@@ -86,9 +84,13 @@ const ExploreScreen = () => {
         ))}
       </div>
 
-      {/* RESULTS GRID */}
+      {/* RESULTS GRID - SKELETON LOADER ADDED HERE */}
       {loading ? (
-        <div className="loading">Searching the pantry...</div>
+        <div className="recipe-grid">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <div key={n} className="skeleton-card"></div>
+          ))}
+        </div>
       ) : (
         <div className="recipe-grid">
           {recipes.length > 0 ? (
@@ -98,7 +100,6 @@ const ExploreScreen = () => {
                   id={r.id}
                   title={r.title}
                   image={r.image_url}
-                  // Use the new flattened column name!
                   chef={r.chef_name || "Unknown Chef"} 
                   authorId={r.author_id}
                 />
@@ -106,7 +107,6 @@ const ExploreScreen = () => {
             ) : (
             <div className="empty-state">
               <p>No recipes found. Try a different search or filter!</p>
-              {/* Optional: A quick way to clear the search if they get stuck */}
               {(activeSearch || activeFilters.length > 0) && (
                 <button 
                   className="clear-filters-btn"
