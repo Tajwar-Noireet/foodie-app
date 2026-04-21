@@ -6,25 +6,32 @@ const ExploreScreen = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Now using an array for active filters!
+  // Chip Filters
   const [activeFilters, setActiveFilters] = useState([]);
-
   const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Dessert", "Vegan", "Snack", "Drink", "Appetizer"];
+
+  // Search Bar States
+  const [searchTerm, setSearchTerm] = useState(''); // What the user is typing
+  const [activeSearch, setActiveSearch] = useState(''); // The word we are actually searching for
 
   useEffect(() => {
     fetchFilteredRecipes();
-  }, [activeFilters]); 
+  }, [activeFilters, activeSearch]); // Re-run when chips change OR when a search is submitted
 
   const fetchFilteredRecipes = async () => {
     setLoading(true);
-    
-    let query = supabase.from('recipes').select('*');
+    // CHANGE THIS LINE to use our new view!
+    let query = supabase.from('recipes_with_chefs').select('*');
 
-    // If they have selected filters, use the 'overlaps' operator
+    // 1. Filter by Categories (Chips)
     if (activeFilters.length > 0) {
-      // .overlaps means "Show me recipes where the recipe's cuisine array 
-      // shares AT LEAST ONE tag with my activeFilters array"
       query = query.overlaps('cuisine', activeFilters);
+    }
+
+    // 2. Filter by Search Text
+    if (activeSearch.trim()) {
+      // .ilike is "Case-Insensitive Like"
+      query = query.ilike('title', `%${activeSearch}%`);
     }
 
     const { data, error } = await query.order('created_at', { ascending: false });
@@ -39,9 +46,26 @@ const ExploreScreen = () => {
     );
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault(); // Prevents the page from refreshing
+    setActiveSearch(searchTerm); // This triggers the useEffect!
+  };
+
   return (
     <div className="explore-container">
       <h1 className="feed-title">Explore</h1>
+
+      {/* NEW SEARCH BAR */}
+      <form className="search-form" onSubmit={handleSearchSubmit}>
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Search for 'Chicken', 'Pasta'..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button type="submit" className="search-btn">🔍</button>
+      </form>
 
       {/* MULTI-SELECT FILTER CHIPS */}
       <div className="category-scroll">
@@ -68,12 +92,33 @@ const ExploreScreen = () => {
       ) : (
         <div className="recipe-grid">
           {recipes.length > 0 ? (
-            recipes.map((r) => (
-              <RecipeCard key={r.id} id={r.id} title={r.title} image={r.image_url} chef="Chef Gordon" />
-            ))
-          ) : (
+              recipes.map((r) => (
+                <RecipeCard 
+                  key={r.id}
+                  id={r.id}
+                  title={r.title}
+                  image={r.image_url}
+                  // Use the new flattened column name!
+                  chef={r.chef_name || "Unknown Chef"} 
+                  authorId={r.author_id}
+                />
+              ))
+            ) : (
             <div className="empty-state">
-              <p>No recipes found for these filters.</p>
+              <p>No recipes found. Try a different search or filter!</p>
+              {/* Optional: A quick way to clear the search if they get stuck */}
+              {(activeSearch || activeFilters.length > 0) && (
+                <button 
+                  className="clear-filters-btn"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setActiveSearch('');
+                    setActiveFilters([]);
+                  }}
+                >
+                  Clear All Filters
+                </button>
+              )}
             </div>
           )}
         </div>

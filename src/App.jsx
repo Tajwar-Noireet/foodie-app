@@ -16,19 +16,25 @@ import ProfileScreen from './screens/ProfileScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import AuthScreen from './screens/AuthScreen';
 import EditScreen from './screens/EditScreen';
+import PublicProfileScreen from './screens/PublicProfileScreen';
 
 function App() {
   const [session, setSession] = useState(null);
-
-  useEffect(() => {
+  const [loading, setLoading] = useState(true);
+useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setLoading(false); // Unlocks the app only AFTER checking login
     });
-    supabase.auth.onAuthStateChange((_event, session) => {
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
+  if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Waking up the database...</div>;
   if (!session) return <AuthScreen />;
 
   return (
@@ -57,14 +63,23 @@ function App() {
       <div className="main-content">
         {/* 3. THE DYNAMIC CONTENT (Only this part changes) */}
         <Routes>
-          <Route path="/" element={<FeedScreen />} />
-          <Route path="/explore" element={<ExploreScreen />} />
-          <Route path="/create" element={<CreateScreen />} />
-          <Route path="/saved" element={<SavedScreen />} />
+          {/* THE CORE FEEDS */}
+          <Route path="/" element={<FeedScreen session={session} />} />
+          <Route path="/feed" element={<FeedScreen session={session} />} />
+          <Route path="/explore" element={<ExploreScreen session={session} />} />
+          
+          {/* CREATION & SAVES */}
+          <Route path="/create" element={<CreateScreen session={session} />} />
+          <Route path="/edit/:id" element={<EditScreen session={session} />} />
+          <Route path="/saved" element={<SavedScreen session={session} />} />
+          
+          {/* PROFILES & DETAILS */}
           <Route path="/profile" element={<ProfileScreen session={session} />} />
-          <Route path="/recipe/:id" element={<RecipeDetailScreen />} />
+          <Route path="/user/:id" element={<PublicProfileScreen session={session} />} />
+          <Route path="/recipe/:id" element={<RecipeDetailScreen session={session} />} />
+          
+          {/* CATCH-ALL (Must be at the very bottom!) */}
           <Route path="*" element={<Navigate to="/" />} />
-          <Route path="/edit/:id" element={<EditScreen />} />
         </Routes>
       </div>
 

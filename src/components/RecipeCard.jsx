@@ -1,46 +1,40 @@
 import React from 'react';
-import './RecipeCard.css';
-import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-export default function RecipeCard({ id, title, image, chef }) {
-  
-    const navigate = useNavigate();
-
-  const handleCardClick = () => {
-    navigate(`/recipe/${id}`); // Redirects to e.g., /recipe/123-abc
-  }
-    const displayImage = image || 'https://via.placeholder.com/400x300?text=No+Image+Found';
-  const handleSave = async (e) => {
-    e.stopPropagation(); // Prevents clicking the heart from opening the recipe detail
-    
-    // We get the current user's ID from Supabase Auth
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      alert("Please log in to save recipes!");
-      return;
-    }
-
-    const { error } = await supabase
-      .from('saved_recipes')
-      .insert([{ user_id: user.id, recipe_id: id }]);
-
-    if (error) {
-      if (error.code === '23505') alert("Already saved!"); // Postgres 'Unique Violation' code
-      else console.error(error);
-    } else {
-      alert("Saved to your collection!");
-    }
-  };
+export default function RecipeCard({ id, title, image, chef, authorId }) {
+  const navigate = useNavigate();
 
   return (
-    <div className="recipe-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
-      <div className="save-icon" onClick={handleSave}>🔖</div>
-      <img src={image} className="recipe-image" alt={title} />
-      <div className="recipe-info">
-        <h2 className="recipe-title">{title}</h2>
-        <span className="chef-name">By {chef}</span>
+    <div 
+      className="recipe-card" 
+      onClick={() => navigate(`/recipe/${id}`)}
+      style={{
+        background: '#fff',
+        borderRadius: '12px',
+        border: '1px solid #efefef',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+      }}
+    >
+      <div style={{ width: '100%', height: '200px' }}>
+        <img 
+          src={image || 'https://via.placeholder.com/400x300?text=No+Image'} 
+          alt={title} 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </div>
+      <div style={{ padding: '15px' }}>
+        <h3 style={{ margin: '0 0 5px 0', fontSize: '1.1rem', color: '#262626' }}>{title}</h3>
+        <p style={{ fontSize: '0.9rem', color: '#8e8e8e', margin: 0 }}>
+          By <Link 
+               to={`/user/${authorId}`} 
+               style={{ color: '#0095f6', textDecoration: 'none', fontWeight: '600' }}
+               onClick={(e) => e.stopPropagation()} // Prevents card click when clicking name
+             >
+               {chef || "Unknown Chef"}
+             </Link>
+        </p>
       </div>
     </div>
   );
