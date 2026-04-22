@@ -5,7 +5,7 @@ import DesktopSidebar from './components/DesktopSidebar';
 import BottomNav from './components/BottomNav';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
-
+import MobileHeader from './components/MobileHeader'; // <-- You imported it perfectly here!
 
 // Import your new screens
 import FeedScreen from './screens/FeedScreen';
@@ -24,12 +24,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
 
-  // 2. Whenever 'theme' changes, update the HTML tag and save to localStorage
+  // Whenever 'theme' changes, update the HTML tag and save to localStorage
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('app-theme', theme);
   }, [theme]);
-
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -44,7 +43,7 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Waking up the database...</div>;
+  if (loading) return <div style={{textAlign: 'center', marginTop: '50px', color: 'var(--text-color)'}}>Waking up the database...</div>;
   if (!session) return <AuthScreen />;
 
   const toggleTheme = () => {
@@ -74,6 +73,10 @@ function App() {
       />
       
       <div className="main-content">
+        
+        {/* 🚨 THE NEW MOBILE HEADER (Only visible on mobile screens) 🚨 */}
+        <MobileHeader currentTheme={theme}/>
+
         {/* 3. THE DYNAMIC CONTENT (Only this part changes) */}
         <Routes>
           {/* THE CORE FEEDS */}
@@ -87,8 +90,7 @@ function App() {
           <Route path="/saved" element={<SavedScreen session={session} />} />
           
           {/* PROFILES & DETAILS */}
-          <Route path="/profile" 
-  element={<ProfileScreen session={session} toggleTheme={toggleTheme} currentTheme={theme} />}/>
+          <Route path="/profile" element={<ProfileScreen session={session} toggleTheme={toggleTheme} currentTheme={theme} />}/>
           <Route path="/user/:id" element={<PublicProfileScreen session={session} />} />
           <Route path="/recipe/:id" element={<RecipeDetailScreen session={session} />} />
           <Route path="/edit-profile" element={<EditProfileScreen session={session} />} />

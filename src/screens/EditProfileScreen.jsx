@@ -26,7 +26,7 @@ export default function EditProfileScreen({ session }) {
         .eq('id', session.user.id)
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error; // Ignore "row not found" error
+      if (error && error.code !== 'PGRST116') throw error; 
 
       if (data) {
         setUsername(data.username || '');
@@ -66,11 +66,10 @@ export default function EditProfileScreen({ session }) {
         finalAvatarUrl = supabase.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
       }
 
-      // --- THE FIX: Changed .update() to .upsert() ---
       const { error: updateError } = await supabase
         .from('profiles')
         .upsert({
-          id: session.user.id, // ID is mandatory for upserting!
+          id: session.user.id,
           username: username.trim(),
           bio: bio.trim(),
           avatar_url: finalAvatarUrl,
@@ -81,7 +80,6 @@ export default function EditProfileScreen({ session }) {
 
       toast.success('Profile updated! ✨');
       
-      // Delay navigation slightly so the DB has time to settle
       setTimeout(() => navigate('/profile'), 500);
       
     } catch (error) {
@@ -91,19 +89,34 @@ export default function EditProfileScreen({ session }) {
     }
   };
 
-  if (loading) return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading settings...</div>;
+  if (loading) return <div style={{ textAlign: 'center', marginTop: '50px', color: 'var(--text-color)' }}>Loading settings...</div>;
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '40px 20px' }}>
-      <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', marginBottom: '20px' }}>← Back</button>
+    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '40px 20px', color: 'var(--text-color)' }}>
+      
+      {/* 🚨 THE FIX: Added color: 'var(--text-color)' to the inline styles! */}
+      <button 
+        onClick={() => navigate(-1)} 
+        style={{ 
+          background: 'none', 
+          border: 'none', 
+          cursor: 'pointer', 
+          fontSize: '16px', 
+          marginBottom: '20px',
+          color: 'var(--text-color)',
+          fontWeight: 'bold'
+        }}
+      >
+        ← Back
+      </button>
       
       <h1 style={{ marginBottom: '30px', textAlign: 'center' }}>Edit Profile</h1>
 
       <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
           <div style={{ 
-              width: '120px', height: '120px', borderRadius: '50%', background: '#f0f8ff', 
-              border: '2px dashed #0095f6', display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              width: '120px', height: '120px', borderRadius: '50%', background: 'var(--hover-bg)', 
+              border: '2px dashed var(--accent-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', 
               overflow: 'hidden', position: 'relative'
           }}>
             {(avatarPreview || avatarUrl) ? (
@@ -115,26 +128,46 @@ export default function EditProfileScreen({ session }) {
               style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
             />
           </div>
-          <span style={{ fontSize: '14px', color: '#0095f6', fontWeight: 'bold' }}>Change Photo</span>
+          <span style={{ fontSize: '14px', color: 'var(--accent-color)', fontWeight: 'bold' }}>Change Photo</span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <label style={{ fontWeight: 'bold' }}>Username</label>
           <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required
-            style={{ padding: '12px', borderRadius: '8px', border: '1px solid #dbdbdb' }}
+            style={{ 
+              padding: '12px', 
+              borderRadius: '8px', 
+              border: '1px solid var(--border-color)', 
+              background: 'var(--bg-color)', 
+              color: 'var(--text-color)' 
+            }}
           />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <label style={{ fontWeight: 'bold' }}>Bio</label>
           <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="What's your cooking style?"
-            style={{ padding: '12px', borderRadius: '8px', border: '1px solid #dbdbdb', minHeight: '100px' }}
+            style={{ 
+              padding: '12px', 
+              borderRadius: '8px', 
+              border: '1px solid var(--border-color)', 
+              background: 'var(--bg-color)', 
+              color: 'var(--text-color)', 
+              minHeight: '100px' 
+            }}
           />
         </div>
 
         <button type="submit" disabled={saving}
-          style={{ padding: '14px', borderRadius: '8px', border: 'none', background: '#0095f6', 
-          color: 'white', fontWeight: 'bold', cursor: saving ? 'not-allowed' : 'pointer' }}
+          style={{ 
+            padding: '14px', 
+            borderRadius: '8px', 
+            border: 'none', 
+            background: 'var(--accent-color, #0095f6)', 
+            color: 'white', 
+            fontWeight: 'bold', 
+            cursor: saving ? 'not-allowed' : 'pointer' 
+          }}
         >
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
