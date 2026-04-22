@@ -69,16 +69,34 @@ export default function FeedScreen({ session }) {
 
   return (
     <div className="feed-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <nav style={{ display: 'flex', justifyContent: 'center', gap: '30px', padding: '20px', borderBottom: '1px solid #dbdbdb' }}>
+      <nav style={{ display: 'flex', justifyContent: 'center', gap: '30px', padding: '20px', borderBottom: '1px solid var(--border-color)', transition: 'border-color 0.3s ease' }}>
         <button 
           onClick={() => setActiveTab('explore')}
-          style={{ fontWeight: activeTab === 'explore' ? 'bold' : 'normal', border: 'none', background: 'none', cursor: 'pointer', fontSize: '16px' }}
+          style={{ 
+            fontWeight: activeTab === 'explore' ? 'bold' : 'normal', 
+            border: 'none', 
+            background: 'none', 
+            cursor: 'pointer', 
+            fontSize: '16px',
+            color: 'var(--text-color)', /* THE FIX: Forces button to use theme text */
+            opacity: activeTab === 'explore' ? 1 : 0.5, /* THE PRO TOUCH: Fades the inactive tab */
+            transition: 'color 0.3s ease, opacity 0.2s ease'
+          }}
         >
           EXPLORE
         </button>
         <button 
           onClick={() => setActiveTab('following')}
-          style={{ fontWeight: activeTab === 'following' ? 'bold' : 'normal', border: 'none', background: 'none', cursor: 'pointer', fontSize: '16px' }}
+          style={{ 
+            fontWeight: activeTab === 'following' ? 'bold' : 'normal', 
+            border: 'none', 
+            background: 'none', 
+            cursor: 'pointer', 
+            fontSize: '16px',
+            color: 'var(--text-color)', /* THE FIX: Forces button to use theme text */
+            opacity: activeTab === 'following' ? 1 : 0.5, /* THE PRO TOUCH: Fades the inactive tab */
+            transition: 'color 0.3s ease, opacity 0.2s ease'
+          }}
         >
           FOLLOWING
         </button>

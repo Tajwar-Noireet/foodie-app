@@ -22,7 +22,16 @@ import EditProfileScreen from './screens/EditProfileScreen';
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-useEffect(() => {
+  const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
+
+  // 2. Whenever 'theme' changes, update the HTML tag and save to localStorage
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('app-theme', theme);
+  }, [theme]);
+
+
+  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false); // Unlocks the app only AFTER checking login
@@ -38,11 +47,14 @@ useEffect(() => {
   if (loading) return <div style={{textAlign: 'center', marginTop: '50px'}}>Waking up the database...</div>;
   if (!session) return <AuthScreen />;
 
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
   return (
     <div className="app-layout">
       {/* 2. THE PERMANENT UI (These stay on screen at all times) */}
-      <DesktopSidebar /> 
-
+      <DesktopSidebar toggleTheme={toggleTheme} currentTheme={theme} />
       <Toaster 
         position="top-center" 
         toastOptions={{
@@ -75,7 +87,8 @@ useEffect(() => {
           <Route path="/saved" element={<SavedScreen session={session} />} />
           
           {/* PROFILES & DETAILS */}
-          <Route path="/profile" element={<ProfileScreen session={session} />} />
+          <Route path="/profile" 
+  element={<ProfileScreen session={session} toggleTheme={toggleTheme} currentTheme={theme} />}/>
           <Route path="/user/:id" element={<PublicProfileScreen session={session} />} />
           <Route path="/recipe/:id" element={<RecipeDetailScreen session={session} />} />
           <Route path="/edit-profile" element={<EditProfileScreen session={session} />} />

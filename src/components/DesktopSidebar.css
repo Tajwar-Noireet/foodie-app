@@ -1,54 +1,56 @@
 @font-face {
   font-family: 'Nexa';
-  /* This path goes up one level (..) to assets, then into fonts */
   src: url('../assets/fonts/NexaBold.otf') format('opentype');
   font-weight: bold;
 }
 
+/* --- BRANDING --- */
 .sidebar-brand {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-  padding: 24px;
+  padding: 0 0 40px 0;
+  margin-left: -20px; /* Pulls it over the left padding */
+  margin-right: -20px; /* Pulls it over the right padding */
   cursor: pointer;
 }
 
 .brand-logo-img {
-  width: 180px;
-  height: 180px;
-  object-fit: contain;
+  width: 100%; /* Tells the logo to fill up almost the entire sidebar width */
+  max-width: none; /* A safety net so it doesn't get ridiculously huge */
+  height: auto; /* Lets the height grow naturally based on the width */
+  object-fit: contain; /* Prevents any cropping */
+  transition: transform 0.2s ease; /* Optional: smooth hover effect prep */
+}
+
+/* Optional Pro-Touch: A tiny hover effect since it's a giant button now */
+.sidebar-brand:hover .brand-logo-img {
+  transform: scale(1.05);
 }
 
 
-
-
 /* --- 1. THE KILL SWITCH: Hide on Mobile --- */
-
-
 .desktop-sidebar {
-  display: none !important; 
+  display: none;
 }
 
 /* --- 2. Desktop Styles --- */
 @media (min-width: 1024px) {
   .desktop-sidebar {
-    display: flex !important; /* Forces it to appear on PC */
+    display: flex !important; 
     flex-direction: column;
     width: 260px;
     height: 100vh;
     position: sticky;
     top: 0;
     padding: 30px 20px;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
-    background: #FFFFFF;
     flex-shrink: 0;
     box-sizing: border-box;
-  }
-
-  .sidebar-brand h2 {
-    margin: 0 0 40px 15px;
-    font-size: 24px;
-    font-weight: 800;
+    
+    /* THE FIX: Let the theme variables control the background and border */
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .sidebar-nav {
@@ -61,14 +63,16 @@
   .sidebar-link {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 12px 15px;
-    text-decoration: none;
-    color: #333;
+    gap: 10px;
+    padding: 10px 15px;
     font-size: 18px;
     font-weight: 500;
     border-radius: 12px;
-    transition: background 0.2s, transform 0.1s;
+    text-decoration: none;
+    
+    /* THE FIX: Only one color declaration! */
+    color: var(--text-color); 
+    transition: background-color 0.2s, transform 0.1s, color 0.3s ease;
   }
 
   .sidebar-link .icon {
@@ -76,13 +80,14 @@
     opacity: 0.5;
   }
 
+  /* THE FIX: Use your hover variable so it looks good in both modes */
   .sidebar-link:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background-color: var(--hover-bg); 
     transform: translateX(5px);
   }
 
   .sidebar-link.active {
-    background: rgba(0, 0, 0, 0.08);
+    background-color: var(--hover-bg); 
     font-weight: 700;
   }
 
@@ -96,7 +101,8 @@
     justify-content: center;
     gap: 10px;
     padding: 15px;
-    background: #1D1B20;
+    /* Use the accent color so it stands out in both dark and light modes */
+    background-color: var(--accent-color); 
     color: white;
     text-decoration: none;
     font-size: 18px;
@@ -109,4 +115,3 @@
     transform: scale(1.02);
   }
 }
-

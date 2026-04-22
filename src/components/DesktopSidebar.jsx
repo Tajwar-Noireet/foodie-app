@@ -2,19 +2,25 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './DesktopSidebar.css';
 
-// 1. This import points to the folder you just fixed!
-import logoImg from '../assets/images/logo.png';
+// 1. UNCOMMENTED: Make sure these file names match your actual files exactly!
+import logoLight from '../assets/images/logo.png';       
+import logoDark from '../assets/images/logo-white.png';  
 
-export default function DesktopSidebar() {
+export default function DesktopSidebar({ toggleTheme, currentTheme }) {
   const location = useLocation();
-  const navigate = useNavigate(); // <-- Added this to fix the error
+  const navigate = useNavigate(); 
   const currentPath = location.pathname;
 
   return (
     <aside className="desktop-sidebar">
-      {/* 2. UPDATED: Brand area with Logo and Nexa Font */}
+      
+      {/* 2. FIXED BRANDING: Only one brand section at the top, using the theme check */}
       <div className="sidebar-brand" onClick={() => navigate('/')}>
-        <img src={logoImg} alt="foodie logo" className="brand-logo-img" />
+        <img 
+          src={currentTheme === 'dark' ? logoDark : logoLight} 
+          alt="foodie logo" 
+          className="brand-logo-img" 
+        />
       </div>
 
       {/* Navigation Links */}
@@ -38,6 +44,20 @@ export default function DesktopSidebar() {
 
       {/* The big Create action at the bottom */}
       <div className="sidebar-footer">
+        {/* THE TOGGLE BUTTON */}
+        <button 
+          onClick={toggleTheme} 
+          className="theme-toggle-btn"
+          style={{
+             width: '100%', padding: '12px', marginBottom: '15px', 
+             borderRadius: '8px', border: '1px solid var(--border-color)', 
+             background: 'transparent', color: 'var(--text-color)',
+             cursor: 'pointer', fontSize: '16px', fontWeight: 'bold'
+          }}
+        >
+          {currentTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
+
         <Link to="/create" className="create-btn">
           ➕ Create Recipe
         </Link>

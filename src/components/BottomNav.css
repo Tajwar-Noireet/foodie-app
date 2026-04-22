@@ -2,18 +2,18 @@
 .bottom-nav-container {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: 100%;
-  max-width: 600px;
-  background: #FFFFFF;
-  border-top: 1px solid rgba(217, 217, 217, 0.52);
-  padding-top: 15px;
-  padding-bottom: 20px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding: 10px 0 20px 0; /* Extra bottom padding for the home indicator */
   z-index: 1000;
+  
+  /* Inherits the theme correctly */
+  background-color: var(--sidebar-bg);
+  border-top: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .nav-item {
@@ -22,16 +22,24 @@
   font-size: 24px;
   opacity: 0.5;
   cursor: pointer;
-  transition: opacity 0.2s;
   text-decoration: none;
+  
+  /* THE FIX: Ensures icons flip to white in dark mode */
+  color: var(--text-color); 
+  transition: opacity 0.2s, color 0.3s ease;
 }
 
 .nav-item.active {
   opacity: 1;
+  /* Optional: Make the active mobile icon pop with your blue accent */
+  color: var(--accent-color); 
 }
 
 .nav-item.add-btn {
-  background: #1D1B20;
+  /* THE FIX: Uses text-color so the button is Black in Light Mode, and White in Dark Mode */
+  background-color: var(--text-color);
+  color: var(--bg-color); /* Inverts the '+' symbol inside the button */
+  
   border-radius: 50%;
   width: 45px;
   height: 45px;
@@ -40,6 +48,7 @@
   align-items: center;
   opacity: 1;
   text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .home-indicator {
@@ -49,8 +58,11 @@
   transform: translateX(-50%);
   width: 144px;
   height: 5px;
-  background: #000000;
+  
+  /* THE FIX: Black in Light Mode, White in Dark Mode */
+  background-color: var(--text-color); 
   border-radius: 100px;
+  transition: background-color 0.3s ease;
 }
 
 /* --- 2. THE KILL SWITCH: Hide on Desktop --- */

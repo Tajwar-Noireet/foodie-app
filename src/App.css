@@ -1,3 +1,31 @@
+/* LIGHT MODE (Default) */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #1D1B20;
+  --sidebar-bg: #f8f9fa;
+  --border-color: #dbdbdb;
+  --accent-color: #0095f6;
+  --hover-bg: #efefef;
+}
+
+/* DARK MODE */
+[data-theme='dark'] {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --sidebar-bg: #000000;
+  --border-color: #333333;
+  --accent-color: #4daafc;
+  --hover-bg: #1a1a1a;
+}
+
+/* Apply the variables globally */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth fade effect */
+}
+
+
 :root {
   --primary-bg: #F8F9FA;
   --font-inter: 'Inter', system-ui, sans-serif;
@@ -11,17 +39,17 @@ body {
 
 /* --- Mobile First Layout --- */
 .app-layout {
-  display: flex;
-  flex-direction: column;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   min-height: 100vh;
+  display: flex; /* Assuming you have a flex layout for sidebar + content */
 }
 
 .main-content {
   flex-grow: 1;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding-bottom: 90px; /* Space for the bottom nav */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* --- Desktop Layout (PC Polish) --- */
