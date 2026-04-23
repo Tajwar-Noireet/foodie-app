@@ -5,19 +5,22 @@ import DesktopSidebar from './components/DesktopSidebar';
 import BottomNav from './components/BottomNav';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
-import MobileHeader from './components/MobileHeader'; // <-- You imported it perfectly here!
+import MobileHeader from './components/MobileHeader'; 
 
-// Import your new screens
+// Import your screens
 import FeedScreen from './screens/FeedScreen';
 import CreateScreen from './screens/CreateScreen';
 import ExploreScreen from './screens/ExploreScreen';
-import SavedScreen from './screens/SavedScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import AuthScreen from './screens/AuthScreen';
 import EditScreen from './screens/EditScreen';
 import PublicProfileScreen from './screens/PublicProfileScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
+
+// 🚨 NEW: Import the Kitchen Hub (It handles Saved & Shopping List for us!)
+import KitchenScreen from './screens/KitchenScreen'; 
+
 
 function App() {
   const [session, setSession] = useState(null);
@@ -84,11 +87,13 @@ function App() {
           <Route path="/feed" element={<FeedScreen session={session} />} />
           <Route path="/explore" element={<ExploreScreen session={session} />} />
           
-          {/* CREATION & SAVES */}
+          {/* CREATION & THE KITCHEN HUB */}
           <Route path="/create" element={<CreateScreen session={session} />} />
           <Route path="/edit/:id" element={<EditScreen session={session} />} />
-          <Route path="/saved" element={<SavedScreen session={session} />} />
           
+          {/* 🚨 REPLACED SAVED & SHOPPING LIST WITH THE KITCHEN HUB */}
+          <Route path="/kitchen" element={<KitchenScreen session={session} />} />
+
           {/* PROFILES & DETAILS */}
           <Route path="/profile" element={<ProfileScreen session={session} toggleTheme={toggleTheme} currentTheme={theme} />}/>
           <Route path="/user/:id" element={<PublicProfileScreen session={session} />} />

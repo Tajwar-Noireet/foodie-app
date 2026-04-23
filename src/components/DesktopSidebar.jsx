@@ -33,8 +33,9 @@ export default function DesktopSidebar({ toggleTheme, currentTheme }) {
           <span className="icon">🧭</span> Explore
         </Link>
 
-        <Link to="/saved" className={`sidebar-link ${currentPath === '/saved' ? 'active' : ''}`}>
-          <span className="icon">🔖</span> Saved Recipes
+        {/* 🚨 THE NEW KITCHEN HUB (Replaces Saved & Shopping List) */}
+        <Link to="/kitchen" className={`sidebar-link ${currentPath === '/kitchen' ? 'active' : ''}`}>
+          <span className="icon">🍳</span> My Kitchen
         </Link>
 
         <Link to="/profile" className={`sidebar-link ${currentPath === '/profile' ? 'active' : ''}`}>

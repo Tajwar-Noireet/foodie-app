@@ -24,31 +24,40 @@
   cursor: pointer;
   text-decoration: none;
   
-  /* THE FIX: Ensures icons flip to white in dark mode */
+  /* Ensures icons flip to white in dark mode */
   color: var(--text-color); 
   transition: opacity 0.2s, color 0.3s ease;
 }
 
 .nav-item.active {
   opacity: 1;
-  /* Optional: Make the active mobile icon pop with your blue accent */
   color: var(--accent-color); 
 }
 
-.nav-item.add-btn {
-  /* THE FIX: Uses text-color so the button is Black in Light Mode, and White in Dark Mode */
-  background-color: var(--text-color);
-  color: var(--bg-color); /* Inverts the '+' symbol inside the button */
-  
+/* --- THE NEW FLOATING CREATE BUTTON --- */
+.nav-item.create-btn {
+  opacity: 1; /* Prevents the button from being faded out like inactive icons */
+}
+
+.create-icon-wrapper {
+  background-color: var(--accent-color, #0095f6);
+  color: white;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 1;
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 24px;
+  transform: translateY(-15px); /* Pushes it up to float above the bar */
+  box-shadow: 0 4px 10px rgba(0, 149, 246, 0.3);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Satisfying 'click' animation for mobile users */
+.nav-item.create-btn:active .create-icon-wrapper {
+  transform: translateY(-12px) scale(0.95);
+  box-shadow: 0 2px 5px rgba(0, 149, 246, 0.2);
 }
 
 .home-indicator {
@@ -59,7 +68,7 @@
   width: 144px;
   height: 5px;
   
-  /* THE FIX: Black in Light Mode, White in Dark Mode */
+  /* Black in Light Mode, White in Dark Mode */
   background-color: var(--text-color); 
   border-radius: 100px;
   transition: background-color 0.3s ease;

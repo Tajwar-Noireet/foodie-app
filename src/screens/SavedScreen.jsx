@@ -55,19 +55,20 @@ export default function SavedScreen({ session }) {
 
   if (!session) {
     return (
-      <div style={{ textAlign: 'center', marginTop: '50px', color: '#8e8e8e' }}>
-        <h2>Saved Recipes</h2>
+      // 🚨 Adjusted for the tab view
+      <div className="empty-state" style={{ textAlign: 'center', marginTop: '50px', color: 'var(--text-color)', opacity: 0.7 }}>
+        <span style={{ fontSize: '50px' }}>🔒</span>
         <p>Please log in to see your cookbook!</p>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
-      <h1 style={{ marginBottom: '30px' }}>My Cookbook</h1>
+    // 🚨 Modified padding so it sits flush inside the Kitchen tab
+    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '10px 0' }}>
       
       {loading ? (
-        <p>Opening the cookbook...</p>
+        <p style={{ textAlign: 'center', marginTop: '50px', color: 'var(--text-color)' }}>Opening the cookbook...</p>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
           {savedRecipes.length > 0 ? (
@@ -82,9 +83,12 @@ export default function SavedScreen({ session }) {
               />
             ))
           ) : (
-            <p style={{ gridColumn: '1/-1', color: '#8e8e8e' }}>
-              You haven't saved any recipes yet. Go explore and star some!
-            </p>
+            // 🚨 Styled to match the Shopping List empty state!
+            <div className="empty-state" style={{ gridColumn: '1/-1', textAlign: 'center', marginTop: '50px', color: 'var(--text-color)', opacity: 0.7 }}>
+              <span style={{ fontSize: '50px' }}>❤️</span>
+              <p>You haven't saved any recipes yet.</p>
+              <p>Go explore and star some!</p>
+            </div>
           )}
         </div>
       )}

@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
-import { Reorder, useDragControls } from 'framer-motion'; // <-- NEW: The animation engine!
+import { Reorder, useDragControls } from 'framer-motion'; 
 
-// --- NEW: Sub-component for the animated drag row ---
 const IngredientRow = ({ ing, index, updateIngredient, removeIngredient }) => {
-  const controls = useDragControls(); // Tells Framer Motion to only drag when the grip is touched
+  const controls = useDragControls(); 
 
   return (
     <Reorder.Item 
       value={ing} 
-      id={ing.id} // Framer Motion needs a unique ID to animate properly
-      dragListener={false} // Disables dragging the whole row (so you can still type in the inputs!)
+      id={ing.id} 
+      dragListener={false} 
       dragControls={controls}
       style={{ 
         display: 'flex', 
@@ -23,12 +22,11 @@ const IngredientRow = ({ ing, index, updateIngredient, removeIngredient }) => {
         border: '1px solid var(--border-color, #eaeaea)',
         width: '100%',
         boxSizing: 'border-box',
-        marginBottom: '12px' // Spacing between animated rows
+        marginBottom: '12px' 
       }}
     >
-      {/* Visual Grip Handle (Now wired for mobile touch!) */}
       <div 
-        onPointerDown={(e) => controls.start(e)} // This is the magic that makes mobile drag work
+        onPointerDown={(e) => controls.start(e)} 
         style={{ color: 'var(--text-color)', opacity: 0.4, fontSize: '18px', cursor: 'grab', userSelect: 'none', touchAction: 'none', padding: '0 5px' }}
       >
         ⋮⋮
@@ -88,13 +86,16 @@ const CreateScreen = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
 
-  // --- UPDATED: Added a random string ID to the initial state for animations ---
   const [ingredients, setIngredients] = useState([{ id: Math.random().toString(), amount: '', name: '' }]); 
+  
+  // 🚨 NEW: Added dietary_tags array to the state
   const [formData, setFormData] = useState({
-    title: '', description: '', cuisine: [] 
+    title: '', description: '', cuisine: [], dietary_tags: [] 
   });
 
-  const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Appetizer", "Dessert", "Snack", "Vegan", "Drink"];
+  // 🚨 NEW: Removed Vegan from here, added dietaryOptions list
+  const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Appetizer", "Dessert", "Snack", "Drink"];
+  const dietaryOptions = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "Nut-Free"];
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -106,7 +107,6 @@ const CreateScreen = () => {
     if (file) { setVideoFile(file); setVideoPreview(URL.createObjectURL(file)); }
   };
 
-  // --- UPDATED: Ensures every new row gets a unique ID ---
   const addIngredient = () => setIngredients([...ingredients, { id: Math.random().toString(), amount: '', name: '' }]);
   
   const updateIngredient = (index, field, value) => {
@@ -122,6 +122,15 @@ const CreateScreen = () => {
       const currentList = prev.cuisine || [];
       if (currentList.includes(cat)) return { ...prev, cuisine: currentList.filter(c => c !== cat) };
       return { ...prev, cuisine: [...currentList, cat] };
+    });
+  };
+
+  // 🚨 NEW: Toggle function for dietary restrictions
+  const toggleDietary = (diet) => {
+    setFormData((prev) => {
+      const currentList = prev.dietary_tags || [];
+      if (currentList.includes(diet)) return { ...prev, dietary_tags: currentList.filter(d => d !== diet) };
+      return { ...prev, dietary_tags: [...currentList, diet] };
     });
   };
 
@@ -177,7 +186,7 @@ const CreateScreen = () => {
 
       setProgress(100);
       toast.success("Recipe Published! 🍳✨");
-      setFormData({ title: '', description: '', cuisine: [] });
+      setFormData({ title: '', description: '', cuisine: [], dietary_tags: [] }); // Reset includes dietary_tags now
       setIngredients([{ id: Math.random().toString(), amount: '', name: '' }]); 
       setImagePreview(null);
       setVideoPreview(null);
@@ -227,10 +236,27 @@ const CreateScreen = () => {
           </div>
         </div>
 
+        {/* 🚨 NEW: Dietary Restrictions Section */}
+        <div className="input-group" style={{ maxWidth: '100%', overflow: 'hidden', marginTop: '10px' }}>
+          <label>Dietary Restrictions (Select multiple)</label>
+          <div className="category-scroll">
+            {dietaryOptions.map((diet) => (
+              <button 
+                type="button" 
+                key={diet}
+                className={`chip ${(formData.dietary_tags || []).includes(diet) ? 'active' : ''}`}
+                onClick={() => toggleDietary(diet)}
+                style={{ borderColor: (formData.dietary_tags || []).includes(diet) ? 'var(--accent-color)' : '#4ade80' }} 
+              >
+                {diet}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="ingredients-section" style={{ marginTop: '20px', marginBottom: '20px', width: '100%' }}>
           <label style={{ display: 'block', marginBottom: '15px', fontSize: '18px', fontWeight: 'bold' }}>Ingredients</label>
 
-          {/* THE NEW ANIMATED LIST */}
           <div style={{ width: '100%' }}>
             <Reorder.Group 
               axis="y" 

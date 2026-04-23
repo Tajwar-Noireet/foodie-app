@@ -1,36 +1,85 @@
 .auth-container {
   display: flex;
+  flex-direction: column; /* 🚨 Added to stack logo on top of box */
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
+  min-height: 100vh; /* Changed from 80vh to fill screen */
   padding: 20px;
+  background-color: var(--bg-color); /* Themed background */
+}
+
+/* 🚨 The animated logo styling */
+.auth-logo {
+  width: 160px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 .auth-box {
-  background: white;
+  background: var(--sidebar-bg); /* Themed card */
   padding: 40px;
   border-radius: 30px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   text-align: center;
+  border: 1px solid var(--border-color);
 }
 
 .auth-box h1 {
   margin-bottom: 10px;
   font-size: 28px;
+  color: var(--text-color);
 }
 
 .auth-box p {
-  color: #666;
+  color: var(--text-color);
+  opacity: 0.6;
   margin-bottom: 30px;
+}
+
+/* Ensuring your inputs look consistent */
+.input-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 15px;
+  border: none;
+  background: var(--accent-color);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .toggle-btn {
   margin-top: 20px;
   background: none;
   border: none;
-  color: #007AFF; /* iOS style blue */
+  color: var(--accent-color); 
   cursor: pointer;
   font-weight: 500;
 }

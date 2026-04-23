@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 import ReviewSection from '../components/ReviewSection';
+import ShareButton from '../components/ShareButton';
+import { motion } from 'framer-motion'; // 🚨 NEW: Added Framer Motion for the button
 
 const RecipeDetailScreen = () => {
   const { id } = useParams();
@@ -11,14 +13,13 @@ const RecipeDetailScreen = () => {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [addingToList, setAddingToList] = useState(false); // 🚨 NEW: Loading state for the shopping list
 
   useEffect(() => {
     fetchRecipeDetails();
-    // Get the currently logged-in user
     supabase.auth.getUser().then(({ data: { user } }) => setCurrentUser(user));
   }, [id]);
 
-  // NEW: Check if the user has already saved this recipe once we know who the user is
   useEffect(() => {
     if (currentUser?.id && id) {
       checkSaveStatus();
@@ -39,7 +40,6 @@ const RecipeDetailScreen = () => {
     setLoading(false);
   };
 
-  // NEW: Database check for save status
   const checkSaveStatus = async () => {
     const { data } = await supabase
       .from('saved_recipes')
@@ -51,7 +51,6 @@ const RecipeDetailScreen = () => {
     setIsSaved(!!data);
   };
 
-  // NEW: Toggle Save Function
   const toggleSave = async () => {
     if (!currentUser?.id) {
       toast.error("Please log in to save recipes!");
@@ -60,13 +59,11 @@ const RecipeDetailScreen = () => {
 
     try {
       if (isSaved) {
-        // Unsave
         await supabase.from('saved_recipes').delete()
           .match({ user_id: currentUser.id, recipe_id: id });
         setIsSaved(false);
         toast.success("Removed from cookbook!");
       } else {
-        // Save
         await supabase.from('saved_recipes').insert([
           { user_id: currentUser.id, recipe_id: id }
         ]);
@@ -93,10 +90,48 @@ const RecipeDetailScreen = () => {
     }
   };
 
+  // 🚨 NEW: Bulk Add to Shopping List Logic
+const addToShoppingList = async () => {
+    if (!currentUser?.id) {
+      toast.error("Please log in to build a shopping list!");
+      return;
+    }
+
+    // 🚨 THE FIX: Check if the recipe actually has ingredients first!
+    if (!recipe.recipe_ingredients || recipe.recipe_ingredients.length === 0) {
+      toast.error("This recipe doesn't have any ingredients to add!");
+      return;
+    }
+
+    setAddingToList(true);
+
+    try {
+      const listItems = recipe.recipe_ingredients.map(item => ({
+        user_id: currentUser.id,
+        ingredient_name: item.ingredients?.name || 'Unknown Ingredient',
+        amount: item.amount || '',
+        is_bought: false
+      }));
+
+      const { error: insertErr } = await supabase
+        .from('shopping_list')
+        .insert(listItems);
+
+      if (insertErr) throw insertErr;
+
+      toast.success("Ingredients added to your shopping list! 🛒");
+      
+    } catch (err) {
+      toast.error("Failed to add ingredients.");
+      console.error(err);
+    } finally {
+      setAddingToList(false);
+    }
+  };
+
   if (loading) return <div className="loading-screen">Preparing your meal...</div>;
   if (!recipe) return <div>Recipe not found.</div>;
 
-  // Check if the current user owns this recipe
   const isAuthor = currentUser?.id === recipe.author_id;
 
   return (
@@ -105,13 +140,12 @@ const RecipeDetailScreen = () => {
         <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
         
         <div style={{ display: 'flex', gap: '10px' }}>
-          {/* SAVE BUTTON (Visible to any logged-in user) */}
           {currentUser && (
             <button 
               onClick={toggleSave} 
               style={{
                 ...actionBtnStyle, 
-                backgroundColor: isSaved ? '#1D1B20' : '#0095f6', // Dark if saved, blue if not
+                backgroundColor: isSaved ? '#1D1B20' : '#0095f6', 
                 color: 'white'
               }}
             >
@@ -119,7 +153,6 @@ const RecipeDetailScreen = () => {
             </button>
           )}
 
-          {/* EDIT & DELETE BUTTONS (Only visible to the author) */}
           {isAuthor && (
             <>
               <button onClick={() => navigate(`/edit/${recipe.id}`)} style={actionBtnStyle}>✏️ Edit</button>
@@ -128,12 +161,22 @@ const RecipeDetailScreen = () => {
           )}
         </div>
       </div>
+
+      <div className="recipe-actions-row" style={{ display: 'flex', gap: '15px', margin: '20px 0' }}>
+         <ShareButton 
+           title={recipe.title} 
+           text={`I found this amazing ${recipe.title} recipe!`} 
+         />
+      </div>
       
       <div className="detail-header">
-        {/* Render multiple categories if it's an array */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
           {(recipe.cuisine || []).map(cat => (
              <span key={cat} className="detail-category">{cat}</span>
+          ))}
+          {/* Also display dietary tags if they exist! */}
+          {(recipe.dietary_tags || []).map(diet => (
+             <span key={diet} className="detail-category" style={{ background: '#e8f5e9', color: '#2e7d32', border: '1px solid #c8e6c9' }}>{diet}</span>
           ))}
         </div>
         <h1 className="detail-title">{recipe.title}</h1>
@@ -155,19 +198,45 @@ const RecipeDetailScreen = () => {
               <li key={index}><strong>{item.amount}</strong> {item.ingredients.name}</li>
             ))}
           </ul>
+
+          {/* 🚨 THE NEW SHOPPING LIST BUTTON 🚨 */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={addToShoppingList}
+            disabled={addingToList}
+            style={{
+              width: '100%',
+              padding: '16px',
+              background: 'var(--accent-color, #0095f6)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '15px',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              cursor: addingToList ? 'wait' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              marginTop: '20px',
+              opacity: addingToList ? 0.7 : 1
+            }}
+          >
+            {addingToList ? 'Adding...' : '🛒 Add to Shopping List'}
+          </motion.button>
+
         </div>
         <div className="detail-section">
           <h3>Instructions</h3>
           <p className="detail-description">{recipe.description}</p>
         </div>
       </div>
-      {/* 👇 DROP THIS EXACTLY HERE! 👇 */}
+      
       <ReviewSection recipeId={recipe.id} currentUser={currentUser} />
     </div>
   );
 };
 
-// Quick inline style for the buttons so you don't have to hunt for CSS
 const actionBtnStyle = {
   background: '#f4f4f5', border: 'none', padding: '8px 16px', 
   borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold'

@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
+import { motion } from 'framer-motion'; // 🚨 NEW: Imported Framer Motion
 import './AuthScreen.css';
+
+// 🚨 NEW: Import your logos
+import logoLight from '../assets/images/logo.png';       
+import logoDark from '../assets/images/logo-white.png'; 
 
 export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+
+  // Quick check for theme so the logo matches the user's system/preference
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -24,7 +32,17 @@ export default function AuthScreen() {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      
+      {/* 🚨 THE ANIMATED HOVERING LOGO 🚨 */}
+      <motion.img 
+        src={currentTheme === 'dark' ? logoDark : logoLight} 
+        alt="App Logo" 
+        style={{ width: '180px', marginBottom: '30px' }}
+        animate={{ y: [-10, 10, -10] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+      />
+
       <div className="auth-box">
         <h1>{isSignUp ? 'Join the Kitchen' : 'Welcome Back'}</h1>
         <p>{isSignUp ? 'Create an account to start sharing.' : 'Login to manage your recipes.'}</p>
