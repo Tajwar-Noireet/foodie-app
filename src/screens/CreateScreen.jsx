@@ -205,12 +205,12 @@ const CreateScreen = () => {
         
         <div className="upload-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '15px' }}>
             <label className="image-placeholder">
-              {imagePreview ? <img src={imagePreview} className="img-preview" alt="preview" /> : <div>📸 Photo</div>}
+              {imagePreview ? <img src={imagePreview} className="img-preview" alt="preview" /> : <div style={{ color: 'var(--text-color)' }}>📸 Photo</div>}
               <input type="file" accept="image/*" onChange={handleImageChange} hidden />
             </label>
 
             <label className="video-placeholder">
-              {videoPreview ? <video src={videoPreview} className="video-preview-player" /> : <div>🎬 Video</div>}
+              {videoPreview ? <video src={videoPreview} className="video-preview-player" /> : <div style={{ color: 'var(--text-color)' }}>🎬 Video</div>}
               <input type="file" accept="video/*" onChange={handleVideoChange} hidden />
             </label>
         </div>
