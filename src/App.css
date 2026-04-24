@@ -186,11 +186,38 @@ body {
 
 /* Uploads & Ingredients */
 .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
-.image-placeholder, .video-placeholder {
-  height: 150px; background: #f4f4f5; border: 2px dashed #e4e4e7;
-  border-radius: 18px; cursor: pointer; display: flex;
-  justify-content: center; align-items: center; overflow: hidden;
+.image-placeholder, 
+.video-placeholder {
+  /* 1. Change background from #fff to a variable */
+  background: var(--hover-bg, #f8f9fa); 
+  
+  /* 2. Make sure the border isn't too bright */
+  border: 2px dashed var(--border-color, #ccc);
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
+
+/* Optional: Add a slight hover effect to make it feel responsive */
+.image-placeholder:hover, 
+.video-placeholder:hover {
+  background: var(--border-color, #eee);
+}
+
+.img-preview, 
+.video-preview-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
 .img-preview, .video-preview-player { width: 100%; height: 100%; object-fit: cover; }
 .upload-prompt { text-align: center; color: #71717a; font-size: 14px; font-weight: 600; }
 .ingredients-section { display: flex; flex-direction: column; gap: 10px; }
