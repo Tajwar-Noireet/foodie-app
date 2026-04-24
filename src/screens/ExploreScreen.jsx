@@ -8,16 +8,16 @@ const ExploreScreen = () => {
   
   // --- STATE FOR FILTERS ---
   const [activeFilters, setActiveFilters] = useState([]);
-  const [activeDietaryFilters, setActiveDietaryFilters] = useState([]); // 🚨 NEW: Dietary state
+  const [activeDietaryFilters, setActiveDietaryFilters] = useState([]); 
   const [searchTerm, setSearchTerm] = useState(''); 
   const [activeSearch, setActiveSearch] = useState(''); 
   const [activeRating, setActiveRating] = useState(0);
 
-  // 🚨 NEW: Updated arrays (Vegan moved to dietaryOptions)
   const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Dessert", "Snack", "Drink", "Appetizer"];
-  const dietaryOptions = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "Nut-Free"];
+  
+  // 🚨 ADDED "Halal" to the end of this list!
+  const dietaryOptions = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "Nut-Free", "Halal"];
 
-  // 🚨 NEW: Added activeDietaryFilters to the dependency array
   useEffect(() => {
     fetchFilteredRecipes();
   }, [activeFilters, activeDietaryFilters, activeSearch, activeRating]); 
@@ -31,7 +31,7 @@ const ExploreScreen = () => {
       query = query.overlaps('cuisine', activeFilters);
     }
     
-    // 2. Filter by Dietary Tags 🚨 NEW
+    // 2. Filter by Dietary Tags 
     if (activeDietaryFilters.length > 0) {
       query = query.overlaps('dietary_tags', activeDietaryFilters);
     }
@@ -65,7 +65,6 @@ const ExploreScreen = () => {
     );
   };
 
-  // 🚨 NEW: Toggle function for Dietary Tags
   const toggleDietaryFilter = (diet) => {
     setActiveDietaryFilters((prev) => 
       prev.includes(diet) ? prev.filter(d => d !== diet) : [...prev, diet]
@@ -118,7 +117,7 @@ const ExploreScreen = () => {
         ))}
       </div>
 
-      {/* 🚨 NEW: MULTI-SELECT DIETARY CHIPS */}
+      {/* MULTI-SELECT DIETARY CHIPS */}
       <div className="category-scroll" style={{ marginTop: '10px' }}>
         <button className={`chip ${activeDietaryFilters.length === 0 ? 'active' : ''}`} onClick={() => setActiveDietaryFilters([])}>
           Any Diet
@@ -128,7 +127,7 @@ const ExploreScreen = () => {
             key={diet} 
             className={`chip ${activeDietaryFilters.includes(diet) ? 'active' : ''}`} 
             onClick={() => toggleDietaryFilter(diet)}
-            style={{ borderColor: activeDietaryFilters.includes(diet) ? 'var(--accent-color)' : '#4ade80' }} // Optional: Green border to distinguish them!
+            style={{ borderColor: activeDietaryFilters.includes(diet) ? 'var(--accent-color)' : '#4ade80' }} 
           >
             {diet}
           </button>
@@ -152,7 +151,6 @@ const ExploreScreen = () => {
           ) : (
             <div className="empty-state">
               <p>No recipes found. Try a different search or filter!</p>
-              {/* 🚨 NEW: Clear All Filters now resets the dietary tags too! */}
               {(activeSearch || activeFilters.length > 0 || activeDietaryFilters.length > 0 || activeRating > 0) && (
                 <button 
                   className="clear-filters-btn"

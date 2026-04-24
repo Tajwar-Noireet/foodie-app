@@ -95,7 +95,7 @@ const CreateScreen = () => {
 
   // 🚨 NEW: Removed Vegan from here, added dietaryOptions list
   const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Appetizer", "Dessert", "Snack", "Drink"];
-  const dietaryOptions = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "Nut-Free"];
+  const dietaryOptions = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "Nut-Free", "Halal"];
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
