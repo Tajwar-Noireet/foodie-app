@@ -26,7 +26,7 @@ export default function RecipeCard({ id, title, image, chef, authorId, rating })
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
 
-        {/* --- NEW: THE FLOATING RATING BADGE --- */}
+        {/* ---  THE FLOATING RATING BADGE --- */}
         <div style={{
           position: 'absolute',
           top: '10px',
@@ -43,7 +43,7 @@ export default function RecipeCard({ id, title, image, chef, authorId, rating })
           backdropFilter: 'blur(4px)',
           boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
         }}>
-          {/* Shows 1 decimal place (e.g., 4.5) or 'New' if no reviews exist */}
+          
           ⭐ {rating > 0 ? Number(rating).toFixed(1) : 'New'}
         </div>
 

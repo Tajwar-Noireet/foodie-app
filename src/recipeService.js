@@ -2,7 +2,7 @@ import { supabase } from './supabaseClient';
 
 export const fetchUserSavedMenu = async (userId) => {
   try {
-    // 1. Fetch the user's saved recipes and nested ingredients
+    
     const { data, error } = await supabase
       .from('saved_recipes')
       .select(`
@@ -23,14 +23,14 @@ export const fetchUserSavedMenu = async (userId) => {
 
     if (error) throw error;
 
-    // 2. Extract just the recipes from the nested response
+    
     const savedRecipes = data.map(item => item.recipes);
 
-    // 3. The Deduplication Engine 
+    
     const allIngredients = savedRecipes.flatMap(recipe => recipe.recipe_ingredients);
     
     const deduplicatedIngredients = allIngredients.reduce((acc, curr) => {
-      // Safety check in case a recipe has no ingredients attached
+      
       if (!curr || !curr.ingredients) return acc; 
       
       const ingredientName = curr.ingredients.name;
@@ -46,7 +46,7 @@ export const fetchUserSavedMenu = async (userId) => {
       return acc;
     }, {});
 
-    // Convert the object back into an array for easy React mapping
+    
     const finalIngredientsList = Object.values(deduplicatedIngredients);
 
     return {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import './AuthScreen.css'; // Reusing your awesome CSS!
+import './AuthScreen.css'; 
 
 export default function ResetPassword() {
   const [email, setEmail] = useState('');

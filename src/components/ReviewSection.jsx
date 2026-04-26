@@ -6,19 +6,19 @@ export default function ReviewSection({ recipeId, currentUser }) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Form State (New Review)
+  
   const [newComment, setNewComment] = useState('');
   const [newRating, setNewRating] = useState(5);
   const [hasReviewed, setHasReviewed] = useState(false);
 
-  // --- NEW: Edit States ---
+  
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editRating, setEditRating] = useState(5);
   const [editContent, setEditContent] = useState('');
 
   useEffect(() => {
     if (recipeId) fetchReviews();
-  }, [recipeId, currentUser]); // Added currentUser to dependency array to catch late logins
+  }, [recipeId, currentUser]); 
 
   const fetchReviews = async () => {
     setLoading(true);
@@ -63,7 +63,7 @@ export default function ReviewSection({ recipeId, currentUser }) {
     }
   };
 
-  // --- NEW: DELETE LOGIC ---
+  // --- DELETE LOGIC ---
   const handleDelete = async (reviewId) => {
     if (!window.confirm("Are you sure you want to delete your review?")) return;
 
@@ -80,7 +80,7 @@ export default function ReviewSection({ recipeId, currentUser }) {
     }
   };
 
-  // --- NEW: EDIT LOGIC ---
+  // ---  EDIT LOGIC ---
   const startEditing = (review) => {
     setEditingReviewId(review.id);
     setEditRating(review.rating);
@@ -108,7 +108,7 @@ export default function ReviewSection({ recipeId, currentUser }) {
     }
   };
 
-  // Quick helper to render stars
+  
   const renderStars = (rating) => {
     return '★'.repeat(rating) + '☆'.repeat(5 - rating);
   };
@@ -117,11 +117,11 @@ export default function ReviewSection({ recipeId, currentUser }) {
     <div className="review-section" style={{ marginTop: '40px', borderTop: '1px solid var(--border-color, #dbdbdb)', paddingTop: '20px' }}>
       <h2>Reviews & Comments</h2>
 
-      {/* THE NEW REVIEW FORM */}
+      {/* THE  REVIEW FORM */}
       {currentUser && !hasReviewed ? (
         <form onSubmit={handleSubmit} style={{ marginBottom: '30px', background: 'var(--hover-bg, #f9f9f9)', padding: '15px', borderRadius: '8px' }}>
           
-          {/* THE NEW SLIDER */}
+          {/* THE SLIDER */}
           <div style={{ marginBottom: '15px' }}>
             <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
               Rating: <span style={{ color: '#f59e0b' }}>{renderStars(newRating)}</span>
@@ -196,7 +196,7 @@ export default function ReviewSection({ recipeId, currentUser }) {
                   </div>
                   <p style={{ margin: '0 0 10px 0', color: 'var(--text-color, #333)' }}>{review.content}</p>
                   
-                  {/* EDIT & DELETE BUTTONS (Only visible to the author of the review) */}
+                  
                   {currentUser?.id === review.user_id && (
                     <div style={{ display: 'flex', gap: '15px' }}>
                       <button onClick={() => startEditing(review)} style={{ background: 'none', border: 'none', color: 'var(--text-color, #888)', cursor: 'pointer', fontSize: '13px', padding: 0, fontWeight: 'bold' }}>Edit</button>

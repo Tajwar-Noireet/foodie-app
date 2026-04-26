@@ -102,7 +102,7 @@ export default function FeedScreen({ session }) {
         </button>
       </nav>
 
-      {/* SKELETON LOADER IMPLEMENTED HERE */}
+      {/* SKELETON LOADER */}
       {loading ? (
         <div className="recipe-grid">
           {[1, 2, 3, 4, 5, 6].map((n) => (

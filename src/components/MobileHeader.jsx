@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion'; // 🚨 1. Import Framer Motion
+import { motion } from 'framer-motion'; 
 
-// Import your new, bigger logo files
+
 import logoLight from '../assets/images/mobileDark.png';       
 import logoDark from '../assets/images/mobileWhite.png';  
 
@@ -16,14 +16,14 @@ export default function MobileHeader({ currentTheme }) {
           src={currentTheme === 'dark' ? logoDark : logoLight} 
           alt="RecipeApp Logo" 
           
-          /* --- THE ANIMATION MAGIC --- */
-          whileHover={{ scale: 1.05 }} /* Grows slightly when hovered on PC */
-          whileTap={{ scale: 0.9 }}    /* Squishes down when tapped on Mobile */
+          /* --- THE ANIMATION  --- */
+          whileHover={{ scale: 1.05 }} 
+          whileTap={{ scale: 0.9 }}    
           transition={{ 
             type: "spring", 
             stiffness: 400, 
             damping: 17 
-          }} /* Gives it a highly satisfying bouncy physical feel */
+          }} 
         />
         
       </Link>

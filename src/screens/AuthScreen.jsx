@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { motion } from 'framer-motion'; // 🚨 NEW: Imported Framer Motion
+import { motion } from 'framer-motion'; 
 import './AuthScreen.css';
 import { Link } from 'react-router-dom';
 
-// 🚨 NEW: Import your logos
+
 import logoLight from '../assets/images/logo.png';       
 import logoDark from '../assets/images/logo-white.png'; 
 
@@ -15,7 +15,6 @@ export default function AuthScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Quick check for theme so the logo matches the user's system/preference
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
   const handleAuth = async (e) => {
@@ -36,7 +35,7 @@ export default function AuthScreen() {
   return (
     <div className="auth-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       
-      {/* 🚨 THE ANIMATED HOVERING LOGO 🚨 */}
+      {/* HOVERING LOGO */}
       <motion.img 
         src={currentTheme === 'dark' ? logoDark : logoLight} 
         alt="App Logo" 
@@ -66,7 +65,7 @@ export default function AuthScreen() {
             {/* We wrap the input and the button together so we can position the eye icon inside the box */}
             <div style={{ position: 'relative' }}>
               <input 
-                // 🚨 If showPassword is true, make it text. Otherwise, keep it a password!
+                // If showPassword is true, make it text. Otherwise, keep it a password!
                 type={showPassword ? "text" : "password"} 
                 placeholder="••••••••" 
                 value={password}
@@ -75,7 +74,7 @@ export default function AuthScreen() {
                 style={{ paddingRight: '40px' }} /* Make room so text doesn't hide behind the icon */
               />
               
-              {/* 🚨 THE EYE BUTTON */}
+              {/* THE EYE BUTTON */}
               <button 
                 type="button" /* Crucial: 'button' stops it from submitting the form by accident! */
                 onClick={() => setShowPassword(!showPassword)}
@@ -96,7 +95,7 @@ export default function AuthScreen() {
             </div>
           </div>
 
-          {/* 🚨 THE NEW FORGOT PASSWORD LINK 🚨 */}
+        
           {/* It only shows up when the user is trying to Log In */}
           {!isSignUp && (
             <div style={{ textAlign: 'right', marginTop: '-10px', marginBottom: '15px' }}>

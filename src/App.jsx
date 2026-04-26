@@ -7,7 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import './App.css';
 import MobileHeader from './components/MobileHeader'; 
 
-// Import your screens
+// Import screens
 import FeedScreen from './screens/FeedScreen';
 import CreateScreen from './screens/CreateScreen';
 import ExploreScreen from './screens/ExploreScreen';
@@ -20,7 +20,6 @@ import EditProfileScreen from './screens/EditProfileScreen';
 import ResetPassword from './screens/ResetPassword';
 import UpdatePassword from './screens/UpdatePassword';
 
-// 🚨 NEW: Import the Kitchen Hub (It handles Saved & Shopping List for us!)
 import KitchenScreen from './screens/KitchenScreen'; 
 
 function App() {
@@ -28,7 +27,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
 
-  // Whenever 'theme' changes, update the HTML tag and save to localStorage
+ 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('app-theme', theme);
@@ -37,7 +36,7 @@ function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      setLoading(false); // Unlocks the app only AFTER checking login
+      setLoading(false); 
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -49,7 +48,7 @@ function App() {
 
   if (loading) return <div style={{textAlign: 'center', marginTop: '50px', color: 'var(--text-color)'}}>Waking up the database...</div>;
   
-  // 🚨 THE NEW BOUNCER: Handles logged-out users but allows password resets!
+  // THE NEW BOUNCER: Handles logged-out users but allows password resets!
   if (!session) {
     return (
       <div className="app-layout">
@@ -115,7 +114,7 @@ function App() {
           <Route path="/user/:id" element={<PublicProfileScreen session={session} />} />
           <Route path="/recipe/:id" element={<RecipeDetailScreen session={session} />} />
           <Route path="/edit-profile" element={<EditProfileScreen session={session} />} />
-          {/* 🚨 ADD THIS RIGHT HERE! So it exists when they are logged in */}
+          
           <Route path="/update-password" element={<UpdatePassword />} />
 
           {/* CATCH-ALL (Must be at the very bottom!) */}

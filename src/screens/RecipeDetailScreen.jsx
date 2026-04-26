@@ -28,7 +28,7 @@ const RecipeDetailScreen = () => {
 
   const fetchRecipeDetails = async () => {
     setLoading(true);
-    // 🚨 JOIN: Fetches recipe + ingredients + the author's profile username
+    //  Fetches recipe + ingredients + the author's profile username
     const { data, error } = await supabase
       .from('recipes')
       .select(`

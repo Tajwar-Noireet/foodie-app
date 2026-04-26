@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './BottomNav.css';
 
 export default function BottomNav() {
-  // This tells us what the current URL is (e.g., '/', '/profile')
+  
   const location = useLocation();
   const currentPath = location.pathname;
 

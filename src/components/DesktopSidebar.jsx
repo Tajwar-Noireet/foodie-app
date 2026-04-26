@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './DesktopSidebar.css';
 
-// 1. UNCOMMENTED: Make sure these file names match your actual files exactly!
+
 import logoLight from '../assets/images/logo.png';       
 import logoDark from '../assets/images/logo-white.png';  
 

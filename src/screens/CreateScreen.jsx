@@ -88,12 +88,12 @@ const CreateScreen = () => {
 
   const [ingredients, setIngredients] = useState([{ id: Math.random().toString(), amount: '', name: '' }]); 
   
-  // 🚨 NEW: Added dietary_tags array to the state
+  
   const [formData, setFormData] = useState({
     title: '', description: '', cuisine: [], dietary_tags: [] 
   });
 
-  // 🚨 NEW: Removed Vegan from here, added dietaryOptions list
+  
   const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Appetizer", "Dessert", "Snack", "Drink"];
   const dietaryOptions = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "Nut-Free", "Halal"];
 
@@ -236,7 +236,7 @@ const CreateScreen = () => {
           </div>
         </div>
 
-        {/* 🚨 NEW: Dietary Restrictions Section */}
+        
         <div className="input-group" style={{ maxWidth: '100%', overflow: 'hidden', marginTop: '10px' }}>
           <label>Dietary Restrictions (Select multiple)</label>
           <div className="category-scroll">

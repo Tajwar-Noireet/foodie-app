@@ -1,14 +1,14 @@
 .auth-container {
   display: flex;
-  flex-direction: column; /* 🚨 Added to stack logo on top of box */
+  flex-direction: column; 
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Changed from 80vh to fill screen */
+  min-height: 100vh; 
   padding: 20px;
   background-color: var(--bg-color); /* Themed background */
 }
 
-/* 🚨 The animated logo styling */
+/* The animated logo styling */
 .auth-logo {
   width: 160px;
   height: auto;
@@ -38,7 +38,7 @@
   margin-bottom: 30px;
 }
 
-/* Ensuring your inputs look consistent */
+
 .input-group {
   text-align: left;
   margin-bottom: 20px;

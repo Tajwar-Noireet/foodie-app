@@ -4,26 +4,25 @@ import toast from 'react-hot-toast';
 export default function ShareButton({ title, text, url }) {
   
   const handleShare = async () => {
-    // 1. Package the data for the phone's native share sheet
+    
     const shareData = {
       title: title || 'RecipeApp',
       text: text || 'Check out this amazing recipe! 🍳',
-      url: url || window.location.href, // Defaults to the exact page the user is on
+      url: url || window.location.href, 
     };
 
-    // 2. Check if the device actually supports native sharing (Most phones do, PCs usually don't)
+    
     if (navigator.share && navigator.canShare(shareData)) {
       try {
         await navigator.share(shareData);
       } catch (error) {
-        // Users will often open the share sheet and close it without picking an app. 
-        // We don't want to throw an error for that, so we just silently catch it.
+        
         if (error.name !== 'AbortError') {
           console.error('Error sharing:', error);
         }
       }
     } else {
-      // 3. THE FALLBACK: If they are on a PC, just copy the link to their clipboard!
+      
       navigator.clipboard.writeText(shareData.url);
       toast.success("Link copied to clipboard! 📋");
     }

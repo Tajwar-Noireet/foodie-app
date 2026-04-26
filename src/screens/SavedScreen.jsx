@@ -35,7 +35,7 @@ export default function SavedScreen({ session }) {
         return;
       }
 
-      // 2. Fetch those specific recipes using our BULLETPROOF view!
+      // 2. Fetch those specific recipes using our  view!
       const { data: recipes, error: recipeErr } = await supabase
         .from('recipes_with_chefs')
         .select('*')

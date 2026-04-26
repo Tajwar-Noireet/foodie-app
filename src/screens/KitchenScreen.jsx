@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SavedScreen from './SavedScreen'; // Assuming this is your existing saved recipes file
+import SavedScreen from './SavedScreen'; 
 import ShoppingListScreen from './ShoppingListScreen';
 
 const KitchenScreen = ({ session }) => {
@@ -58,7 +58,7 @@ const KitchenScreen = ({ session }) => {
         </div>
       </div>
 
-      {/* 2. THE DYNAMIC CONTENT */}
+      {/*  THE DYNAMIC CONTENT */}
       <div className="kitchen-content" style={{ paddingBottom: '80px' }}>
         {/* Conditionally render the correct screen based on the active tab */}
         {activeTab === 'saved' ? (

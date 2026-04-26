@@ -13,7 +13,7 @@ export default function ProfileScreen({ session, toggleTheme, currentTheme }) {
   // States for our popups
   const [followModal, setFollowModal] = useState({ isOpen: false, type: '', data: [], loading: false });
   
-  // --- NEW: State for our custom Confirm Dialog ---
+  //  State for our custom Confirm Dialog ---
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, message: '', targetUserId: null, actionType: null });
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function ProfileScreen({ session, toggleTheme, currentTheme }) {
     }
   };
 
-  // --- NEW: Step 1: Open the Custom Confirm Dialog ---
+  //  Step 1: Open the Custom Confirm Dialog ---
   const promptSocialAction = (targetUserId, actionType, e) => {
     e.stopPropagation(); // Don't click through to their profile!
     const message = actionType === 'unfollow' 
@@ -78,7 +78,7 @@ export default function ProfileScreen({ session, toggleTheme, currentTheme }) {
     setConfirmDialog({ isOpen: true, message, targetUserId, actionType });
   };
 
-  // --- NEW: Step 2: Actually execute the delete if they say Yes ---
+  //  Step 2: Actually execute the delete if they say Yes ---
   const executeSocialAction = async () => {
     const { targetUserId, actionType } = confirmDialog;
     const myId = session.user.id;
@@ -219,7 +219,7 @@ export default function ProfileScreen({ session, toggleTheme, currentTheme }) {
         </div>
       )}
 
-      {/* --- NEW: THE CUSTOM CONFIRMATION DIALOG --- */}
+      {/* ---  THE CUSTOM CONFIRMATION DIALOG --- */}
       {confirmDialog.isOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10000 /* Higher than the follow list! */ }}>
           <div style={{ background: 'var(--bg-color)', width: '300px', padding: '24px', borderRadius: '16px', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>

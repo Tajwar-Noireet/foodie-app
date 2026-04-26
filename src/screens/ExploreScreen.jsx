@@ -15,7 +15,6 @@ const ExploreScreen = () => {
 
   const categories = ["Breakfast", "Lunch", "Dinner", "Main Course", "Dessert", "Snack", "Drink", "Appetizer"];
   
-  // 🚨 ADDED "Halal" to the end of this list!
   const dietaryOptions = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "Nut-Free", "Halal"];
 
   useEffect(() => {

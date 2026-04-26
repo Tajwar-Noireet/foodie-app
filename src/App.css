@@ -204,7 +204,7 @@ body {
   transition: all 0.2s ease;
 }
 
-/* Optional: Add a slight hover effect to make it feel responsive */
+
 .image-placeholder:hover, 
 .video-placeholder:hover {
   background: var(--border-color, #eee);
@@ -232,7 +232,7 @@ body {
 
 .ingredient-row input { 
   flex: 1; 
-  min-width: 0; /* 🚨 THE MAGIC FIX: Forces inputs to shrink! 🚨 */
+  min-width: 0; 
   padding: 12px;
   border-radius: 12px;
   border: 1px solid var(--border-color);
@@ -272,7 +272,7 @@ body {
 
 /* --- Recipe Details --- */
 .detail-container { padding: 20px; max-width: 800px; margin: 0 auto; }
-/* 🚨 THE ULTIMATE BACK BUTTON FIX 🚨 */
+
 .back-btn { 
   background: transparent !important; 
   border: none !important; 
@@ -313,9 +313,8 @@ body {
 @media (max-width: 600px) { .detail-content { grid-template-columns: 1fr; } }
 
 
-/* ========================================= */
+
 /* EXPLORE SCREEN - FULLY RESPONSIVE FIXES   */
-/* ========================================= */
 
 .explore-container {
   padding: 20px;
@@ -425,11 +424,11 @@ body {
 }
 
 .category-scroll::-webkit-scrollbar-thumb { 
-  background-color: var(--border-color); /* Uses your exact dark/light mode border color */
-  border-radius: 10px; /* Gives it smooth, rounded pill-like edges */
+  background-color: var(--border-color); 
+  border-radius: 10px; 
 }
 
-/* Optional Pro-Touch: Only show the scrollbar on desktop, keep it hidden on mobile! */
+
 @media (max-width: 768px) {
   .category-scroll::-webkit-scrollbar { display: none; }
   .category-scroll { scrollbar-width: none; }
@@ -440,7 +439,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 25px;
   white-space: nowrap; 
-  flex-shrink: 0; /* CRITICAL FIX: Stops text from stacking */
+  flex-shrink: 0; 
   font-size: 14px;
   font-weight: 600;
   color: var(--text-color);
@@ -480,7 +479,7 @@ button.chip.active {
 
 .recipe-grid {
   display: grid;
-  /* CRITICAL FIX: The min() function stops cards from breaking out of tiny screens! */
+  
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 24px;
   padding: 20px 0;
@@ -544,20 +543,20 @@ button.chip.active {
 
 
 
-/* ========================================= */
+
 /* MOBILE TOP HEADER & LOGO                  */
-/* ========================================= */
+
 
 .mobile-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   
-  /* 🚨 THE FIX: Set a strict height, and remove top/bottom padding completely */
+  /*  Set a strict height, and remove top/bottom padding completely */
   height: 80px; 
   padding: 0 20px; /* 0px on top/bottom, 20px on the left/right */
   
-  /* If you want it to touch the left edge of the phone too, change it to: padding: 0 20px 0 0; */
+  
   
   background-color: var(--bg-color);
   border-bottom: 3px solid var(--border-color);
@@ -573,10 +572,10 @@ button.chip.active {
   justify-content: flex-start;
   height: 100%; 
   
-  /* 🚨 THE FIX: This kills the default blue tap highlight on the link container */
+  /*  This kills the default blue tap highlight on the link container */
   -webkit-tap-highlight-color: transparent; 
   
-  /* Optional but recommended: Removes any focus outlines if tapped repeatedly */
+  
   outline: none; 
 }
 
@@ -588,12 +587,11 @@ button.chip.active {
   object-fit: contain; 
   object-position: left center; 
   
-  /* You can leave this here or remove it, the container rule above does the heavy lifting now */
+  
   -webkit-tap-highlight-color: transparent; 
 }
 
 /* 🚨 HIDE ON DESKTOP 🚨 */
-/* Desktop users usually have the logo in a Sidebar, so we hide this Top Bar */
 @media (min-width: 1024px) {
   .mobile-header {
     display: none; 

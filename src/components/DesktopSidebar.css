@@ -4,7 +4,7 @@
   font-weight: bold;
 }
 
-/* --- BRANDING --- */
+/*  BRANDING */
 .sidebar-brand {
   display: flex;
   justify-content: center;
@@ -16,14 +16,14 @@
 }
 
 .brand-logo-img {
-  width: 100%; /* Tells the logo to fill up almost the entire sidebar width */
-  max-width: none; /* A safety net so it doesn't get ridiculously huge */
-  height: auto; /* Lets the height grow naturally based on the width */
-  object-fit: contain; /* Prevents any cropping */
-  transition: transform 0.2s ease; /* Optional: smooth hover effect prep */
+  width: 100%; 
+  max-width: none; 
+  height: auto; 
+  object-fit: contain; 
+  transition: transform 0.2s ease; 
 }
 
-/* Optional Pro-Touch: A tiny hover effect since it's a giant button now */
+
 .sidebar-brand:hover .brand-logo-img {
   transform: scale(1.05);
 }
@@ -47,7 +47,7 @@
     flex-shrink: 0;
     box-sizing: border-box;
     
-    /* THE FIX: Let the theme variables control the background and border */
+    
     background-color: var(--sidebar-bg);
     border-right: 1px solid var(--border-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -70,7 +70,7 @@
     border-radius: 12px;
     text-decoration: none;
     
-    /* THE FIX: Only one color declaration! */
+    
     color: var(--text-color); 
     transition: background-color 0.2s, transform 0.1s, color 0.3s ease;
   }
@@ -80,7 +80,6 @@
     opacity: 0.5;
   }
 
-  /* THE FIX: Use your hover variable so it looks good in both modes */
   .sidebar-link:hover {
     background-color: var(--hover-bg); 
     transform: translateX(5px);
