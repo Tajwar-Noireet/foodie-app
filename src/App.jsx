@@ -23,7 +23,6 @@ import UpdatePassword from './screens/UpdatePassword';
 // 🚨 NEW: Import the Kitchen Hub (It handles Saved & Shopping List for us!)
 import KitchenScreen from './screens/KitchenScreen'; 
 
-
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,7 +48,22 @@ function App() {
   }, []);
 
   if (loading) return <div style={{textAlign: 'center', marginTop: '50px', color: 'var(--text-color)'}}>Waking up the database...</div>;
-  if (!session) return <AuthScreen />;
+  
+  // 🚨 THE NEW BOUNCER: Handles logged-out users but allows password resets!
+  if (!session) {
+    return (
+      <div className="app-layout">
+        <Toaster position="top-center" /> 
+        <Routes>
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
+          
+          {/* If they aren't on those two specific pages, force them to the AuthScreen */}
+          <Route path="*" element={<AuthScreen />} />
+        </Routes>
+      </div>
+    );
+  }
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
