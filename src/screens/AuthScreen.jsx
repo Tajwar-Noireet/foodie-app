@@ -13,6 +13,7 @@ export default function AuthScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Quick check for theme so the logo matches the user's system/preference
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
@@ -50,15 +51,40 @@ export default function AuthScreen() {
         
         <form onSubmit={handleAuth}>
           <div className="input-group">
-            <label>Email Address</label>
-            <input 
-              type="email" 
-              placeholder="chef@gordon.com" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required 
-            />
+            <label>Password</label>
+            {/* We wrap the input and the button together so we can position the eye icon inside the box */}
+            <div style={{ position: 'relative' }}>
+              <input 
+                // 🚨 If showPassword is true, make it text. Otherwise, keep it a password!
+                type={showPassword ? "text" : "password"} 
+                placeholder="••••••••" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required 
+                style={{ paddingRight: '40px' }} /* Make room so text doesn't hide behind the icon */
+              />
+              
+              {/* 🚨 THE EYE BUTTON */}
+              <button 
+                type="button" /* Crucial: 'button' stops it from submitting the form by accident! */
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1.2rem',
+                  opacity: 0.6
+                }}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
           </div>
+          
 
           <div className="input-group">
             <label>Password</label>
