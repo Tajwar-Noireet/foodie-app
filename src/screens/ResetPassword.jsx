@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from './supabaseClient'; // adjust your import path
+import { supabase } from '../supabaseClient'; // adjust your import path
 import toast from 'react-hot-toast';
 
 export default function ResetPassword() {
