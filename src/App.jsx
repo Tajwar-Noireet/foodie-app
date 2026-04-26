@@ -48,7 +48,7 @@ function App() {
 
   if (loading) return <div style={{textAlign: 'center', marginTop: '50px', color: 'var(--text-color)'}}>Waking up the database...</div>;
   
-  // THE NEW BOUNCER: Handles logged-out users but allows password resets!
+  // Handles logged-out users but allows password resets!
   if (!session) {
     return (
       <div className="app-layout">
