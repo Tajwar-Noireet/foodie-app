@@ -1,16 +1,20 @@
-# React + Vite
+# 🍔 Foodie App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack React application where users can discover, share, and manage their favorite recipes. 
 
-Currently, two official plugins are available:
+## ✨ Features
+* **User Authentication:** Secure email login, sign-up, and password recovery using Supabase and Google SMTP.
+* **Recipe Feed:** Browse a dynamic feed of user-submitted recipes.
+* **Kitchen Hub:** A dedicated space for users to manage their saved recipes and shopping lists.
+* **Light/Dark Mode:** Seamless theme switching for better user experience.
+* **Responsive Design:** Fully functional on both desktop and mobile devices.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Tech Stack
+* **Frontend:** React, React Router, Vite, Framer Motion
+* **Backend/Database:** Supabase (PostgreSQL, Auth)
+* **Hosting:** Vercel
 
-## React Compiler
+## 🚀 Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+Make sure you have Node.js installed on your machine.
