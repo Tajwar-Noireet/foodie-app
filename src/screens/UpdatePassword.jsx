@@ -7,6 +7,8 @@ import './AuthScreen.css'; // Reusing your awesome CSS!
 export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  // 🚨 NEW: State to track if the password is visible
+  const [showPassword, setShowPassword] = useState(false); 
   const navigate = useNavigate();
 
   const handleUpdatePassword = async (e) => {
@@ -39,13 +41,36 @@ export default function UpdatePassword() {
         <form onSubmit={handleUpdatePassword}>
           <div className="input-group">
             <label>New Password</label>
-            <input 
-              type="password" 
-              placeholder="New Password (min 6 chars)" 
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required 
-            />
+            
+            {/* 🚨 WRAPPED INPUT FOR THE EYE ICON 🚨 */}
+            <div style={{ position: 'relative' }}>
+              <input 
+                type={showPassword ? "text" : "password"} 
+                placeholder="New Password (min 6 chars)" 
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required 
+                style={{ paddingRight: '40px' }} // Room for the icon
+              />
+              
+              <button 
+                type="button" 
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1.2rem',
+                  opacity: 0.6
+                }}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
           </div>
           
           <button type="submit" className="submit-btn" disabled={loading}>
