@@ -51,6 +51,17 @@ export default function AuthScreen() {
         
         <form onSubmit={handleAuth}>
           <div className="input-group">
+            <label>Email Address</label>
+            <input 
+              type="email" 
+              placeholder="chef@gordon.com" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
+          </div>
+
+          <div className="input-group">
             <label>Password</label>
             {/* We wrap the input and the button together so we can position the eye icon inside the box */}
             <div style={{ position: 'relative' }}>
@@ -83,18 +94,6 @@ export default function AuthScreen() {
                 {showPassword ? '🙈' : '👁️'}
               </button>
             </div>
-          </div>
-          
-
-          <div className="input-group">
-            <label>Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required 
-            />
           </div>
 
           {/* 🚨 THE NEW FORGOT PASSWORD LINK 🚨 */}
