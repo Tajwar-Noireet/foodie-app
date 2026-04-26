@@ -115,7 +115,8 @@ function App() {
           <Route path="/user/:id" element={<PublicProfileScreen session={session} />} />
           <Route path="/recipe/:id" element={<RecipeDetailScreen session={session} />} />
           <Route path="/edit-profile" element={<EditProfileScreen session={session} />} />
-
+          {/* 🚨 ADD THIS RIGHT HERE! So it exists when they are logged in */}
+          <Route path="/update-password" element={<UpdatePassword />} />
 
           {/* CATCH-ALL (Must be at the very bottom!) */}
           <Route path="*" element={<Navigate to="/" />} />
