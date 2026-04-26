@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import './AuthScreen.css'; // Reusing your awesome CSS!
 
 export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState('');
@@ -13,7 +14,6 @@ export default function UpdatePassword() {
     setLoading(true);
 
     try {
-      // Because they clicked the email link, Supabase already knows who they are
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
@@ -21,7 +21,7 @@ export default function UpdatePassword() {
       if (error) throw error;
       
       toast.success('Password updated successfully!');
-      navigate('/feed'); // Send them to the main app!
+      navigate('/feed'); 
 
     } catch (error) {
       toast.error(error.message);
@@ -31,18 +31,28 @@ export default function UpdatePassword() {
   };
 
   return (
-    <form onSubmit={handleUpdatePassword}>
-      <h2>Type New Password</h2>
-      <input 
-        type="password" 
-        placeholder="New Password (min 6 chars)" 
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        required 
-      />
-      <button type="submit" disabled={loading}>
-        {loading ? 'Updating...' : 'Update Password'}
-      </button>
-    </form>
+    <div className="auth-container">
+      <div className="auth-box">
+        <h1>Secure Your Account</h1>
+        <p>Type in your new password below.</p>
+        
+        <form onSubmit={handleUpdatePassword}>
+          <div className="input-group">
+            <label>New Password</label>
+            <input 
+              type="password" 
+              placeholder="New Password (min 6 chars)" 
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required 
+            />
+          </div>
+          
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? 'Updating...' : 'Update Password'}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

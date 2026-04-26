@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { motion } from 'framer-motion'; // 🚨 NEW: Imported Framer Motion
 import './AuthScreen.css';
+import { Link } from 'react-router-dom';
 
 // 🚨 NEW: Import your logos
 import logoLight from '../assets/images/logo.png';       
@@ -69,6 +70,24 @@ export default function AuthScreen() {
               required 
             />
           </div>
+
+          {/* 🚨 THE NEW FORGOT PASSWORD LINK 🚨 */}
+          {/* It only shows up when the user is trying to Log In */}
+          {!isSignUp && (
+            <div style={{ textAlign: 'right', marginTop: '-10px', marginBottom: '15px' }}>
+              <Link 
+                to="/reset-password" 
+                style={{ 
+                  color: 'var(--primary-color, #3b82f6)', 
+                  fontSize: '0.85rem', 
+                  textDecoration: 'none',
+                  fontWeight: '500'
+                }}
+              >
+                Forgot your password?
+              </Link>
+            </div>
+          )}
 
           <button type="submit" className="submit-btn" disabled={loading}>
             {loading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Log In')}

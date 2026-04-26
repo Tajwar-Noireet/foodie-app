@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { supabase } from '../supabaseClient'; // adjust your import path
+import { supabase } from '../supabaseClient';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+import './AuthScreen.css'; // Reusing your awesome CSS!
 
 export default function ResetPassword() {
   const [email, setEmail] = useState('');
@@ -12,7 +14,6 @@ export default function ResetPassword() {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        // Crucial: Tell Supabase where to send them AFTER they click the email link
         redirectTo: 'https://foodie-app-red.vercel.app/update-password', 
       });
 
@@ -27,18 +28,32 @@ export default function ResetPassword() {
   };
 
   return (
-    <form onSubmit={handlePasswordReset}>
-      <h2>Reset Password</h2>
-      <input 
-        type="email" 
-        placeholder="Enter your email" 
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required 
-      />
-      <button type="submit" disabled={loading}>
-        {loading ? 'Sending...' : 'Send Reset Link'}
-      </button>
-    </form>
+    <div className="auth-container">
+      <div className="auth-box">
+        <h1>Reset Password</h1>
+        <p>Enter your email and we'll send you a link to get back into the kitchen.</p>
+        
+        <form onSubmit={handlePasswordReset}>
+          <div className="input-group">
+            <label>Email Address</label>
+            <input 
+              type="email" 
+              placeholder="chef@gordon.com" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
+          </div>
+          
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? 'Sending...' : 'Send Reset Link'}
+          </button>
+        </form>
+
+        <Link to="/">
+          <button className="toggle-btn">Back to Log In</button>
+        </Link>
+      </div>
+    </div>
   );
 }
