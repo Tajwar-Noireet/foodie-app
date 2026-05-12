@@ -11,7 +11,7 @@ A full-stack React application where users can discover, share, and manage their
 
 ## 🛠️ Tech Stack
 * **Frontend:** React, React Router, Vite, Framer Motion
-* **Backend/Database:** Supabase (PostgreSQL, Auth)
+* **Backend/Database:** Node.JS,  Supabase (PostgreSQL, Auth)
 * **Hosting:** Vercel
 
 ## 🚀 Getting Started
